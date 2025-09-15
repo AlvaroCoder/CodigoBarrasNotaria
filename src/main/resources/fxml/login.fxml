@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.AuthController"
+            prefHeight="400.0" prefWidth="600.0">
+    <center>
+        <HBox prefHeight="500" prefWidth="800">
+            <VBox prefWidth="350" alignment="CENTER" style="-fx-background-color: #0C1019;">
+                <ImageView
+                    fx:id="logoNotaria"
+                    fitWidth="200" fitHeight="200"
+                    preserveRatio="true"
+                />
+            </VBox>
+            <VBox prefWidth="450" spacing="15" alignment="CENTER">
+                <Label text="Iniciar Sesion" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+                <TextField fx:id="txtUsername" promptText="Usuario" maxWidth="250"/>
+                <PasswordField fx:id="txtPassword" promptText="Contraseña" maxWidth="250"/>
+
+                <Button fx:id="btnLogin"
+                        text="Ingresar"
+                        style="-fx-background-color: #001f3f; -fx-text-fill: white;"
+                        maxWidth="250"/>
+
+            </VBox>
+        </HBox>
+    </center>
+</BorderPane>
