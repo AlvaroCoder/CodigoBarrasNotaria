@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.DashboardControllerHome"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <center>
+        <VBox prefWidth="800" prefHeight="500" spacing="20" alignment="CENTER">
+            <padding>
+                <Insets top="30" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <Label text="Procesamiento de Documentos"
+                   style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+            <VBox spacing="5" alignment="CENTER_LEFT" maxWidth="400">
+                <Label text="Directorio de documentos:" style="-fx-font-size: 14px;"/>
+                <TextField fx:id="txtInputDir" promptText="Ingrese la ruta del directorio de documentos"
+                           prefWidth="400"/>
+            </VBox>
+
+            <VBox spacing="5" alignment="CENTER_LEFT" maxWidth="400">
+                <Label text="Directorio de salida PDF:" style="-fx-font-size: 14px;"/>
+                <TextField fx:id="txtOutputDirPdf" promptText="Ingrese la ruta donde se guardarán los archivos (.PDF)"
+                           prefWidth="400"/>
+            </VBox>
+
+            <VBox spacing="5" alignment="CENTER_LEFT" maxWidth="400">
+                <Label text="Directorio de salida TXT:" style="-fx-font-size: 14px;"/>
+                <TextField fx:id="txtOutputDirTxt" promptText="Ingrese la ruta donde se guardarán los archivos (.TXT)"
+                           prefWidth="400"/>
+            </VBox>
+            <!-- Botón procesar -->
+            <Button fx:id="btnProcess"
+                    text="⚡ Procesar documentos"
+                    style="-fx-font-size: 16px; -fx-background-color: #0C1019; -fx-text-fill: white; -fx-padding: 12 24;"/>
+        </VBox>
+    </center>
+</BorderPane>

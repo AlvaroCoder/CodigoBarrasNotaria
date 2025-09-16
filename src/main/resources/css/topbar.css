@@ -1,0 +1,38 @@
+.topbar {
+    -fx-background-color: #0C1019;
+}
+
+.title {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+}
+
+.nav-link {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: #d0d0d0;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-padding: 5 10;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+}
+
+.nav-link:hover {
+    -fx-text-fill: #4da3ff;
+    -fx-underline: true;
+    -fx-background-color: rgba(77,163,255,0.1); /* leve resalto */
+}
+
+.username {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+}
+
+.user-icon {
+    -fx-font-size: 20px;
+}

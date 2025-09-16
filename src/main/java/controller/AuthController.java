@@ -30,6 +30,4 @@ public class AuthController {
             System.out.println("Usuario: " + username + " | Contraseña: " + password);
         });
     }
-
-
 }

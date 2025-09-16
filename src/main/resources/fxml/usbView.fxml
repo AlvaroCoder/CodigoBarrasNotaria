@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<BorderPane
+        xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.DashboardControllerUsb"
+            prefHeight="400.0" prefWidth="600.0">
+    <top/>
+    <center>
+        <VBox prefWidth="800" prefHeight="500" spacing="20"  alignment="TOP_CENTER">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Label text="Bienvenido a la parte del usb"
+                   style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+            <HBox spacing="20" alignment="CENTER">
+
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

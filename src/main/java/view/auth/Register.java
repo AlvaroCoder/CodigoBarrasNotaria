@@ -7,6 +7,7 @@ public class Register extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         stage.setTitle("Registro de Usuario");
+
     }
 
     public static void main(String[] args) {

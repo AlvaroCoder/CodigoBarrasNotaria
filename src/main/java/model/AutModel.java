@@ -8,6 +8,9 @@ import java.beans.EventHandler;
 public class AutModel implements AuthService {
     @Override
     public boolean login(String username, String password) {
+        if (username.isEmpty() || password.isEmpty()){
+            return false;
+        }
         return "admin".equals(username) && "1234".equals(password);
     }
 
