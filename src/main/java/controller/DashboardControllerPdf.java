@@ -40,7 +40,7 @@ public class DashboardControllerPdf {
         try{
             String id = txtClaveId.getText();
             Pdf pdf = new Pdf();
-            byte[] pdfByte = pdf.fromTxtToPdf(id);
+            byte[] pdfByte = pdf.fromTxtToPdf(id,"1234");
             System.out.println("pdfByte = " + pdfByte);
             Path tempFile = Files.createTempFile("pdfPreview_",".pdf");
             Files.write(tempFile, pdfByte);

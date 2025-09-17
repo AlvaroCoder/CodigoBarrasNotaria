@@ -10,10 +10,7 @@ import dao.impl.RecordDaoImpl;
 import dao.impl.UsbDaoImpl;
 
 import java.awt.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -38,12 +35,21 @@ public class Pdf {
         this.txtDirectory=txtDirectory;
     }
 
-    public byte[] fromTxtToPdf(String pageId) throws IOException {
+    public byte[] fromTxtToPdf(String pageId, String password) throws IOException {
         PageDaoImpl pageDaoImpl = new PageDaoImpl();
         Page page =pageDaoImpl.findOne(pageId);
         String txtPath = page.getPath();
         String txtBase64 = new String(Files.readAllBytes(Paths.get(txtPath)));
-        return Base64.getDecoder().decode(txtBase64);
+        byte[] pdfBytes = Base64.getDecoder().decode(txtBase64);
+        ReaderProperties props = new ReaderProperties().setPassword(password.getBytes());
+        PdfReader reader = new PdfReader(new ByteArrayInputStream(pdfBytes),props);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PdfWriter writer = new PdfWriter(baos);
+
+        PdfDocument pdfDoc = new PdfDocument(reader,writer);
+        pdfDoc.close();
+        return baos.toByteArray();
     }
 
     public String saveInfoUsb(Integer clientId){

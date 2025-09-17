@@ -54,6 +54,7 @@ public class PageDaoImpl implements PageDao {
     @Override
     public String insertOne(Page page){
         String sql = "INSERT INTO pages(id,serialNumber,recordId,path) VALUES(?,?,?,?)";
+        String id=null;
         try(Connection conn= DbConnection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);
         ) {
@@ -64,10 +65,18 @@ public class PageDaoImpl implements PageDao {
 
             int records = stmt.executeUpdate();
 
+            if (records>0){
+                try(ResultSet rs = stmt.getGeneratedKeys()){
+                    if(rs.next()){
+                        id=rs.getString(1);
+                    }
+                }
+            }
+
         }catch (Exception e){
             System.out.println(e.toString());
         }
-        return "";
+        return id;
     }
 
     @Override
