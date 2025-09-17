@@ -8,7 +8,7 @@ public interface PageDao {
     //POST
     String insertOne(Page page);
     //GET
-    Page findOne(int id);
+    Page findOne(String id);
     List<Page> findMany();
     //DELETE
     void deleteOne(int id);

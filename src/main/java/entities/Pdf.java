@@ -13,7 +13,10 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.UUID;
@@ -27,6 +30,14 @@ public class Pdf {
         this.pdfDirectory=pdfDirectory;
         this.processedPdfDirectory=processedPdfDirectory;
         this.txtDirectory=txtDirectory;
+    }
+
+    public byte[] fromTxtToPdf(String pageId) throws IOException {
+        PageDaoImpl pageDaoImpl = new PageDaoImpl();
+        Page page =pageDaoImpl.findOne(pageId);
+        String txtPath = page.getPath();
+        String txtBase64 = new String(Files.readAllBytes(Paths.get(txtPath)));
+        return Base64.getDecoder().decode(txtBase64);
     }
 
     public String saveInfoUsb(Integer clientId){

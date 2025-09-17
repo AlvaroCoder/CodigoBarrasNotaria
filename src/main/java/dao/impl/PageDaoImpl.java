@@ -14,7 +14,7 @@ import java.util.List;
 public class PageDaoImpl implements PageDao {
     @Override
     public void deleteOne(int id){
-        String sql = "DELETE FROM client WHERE id=?";
+        String sql = "DELETE FROM pages WHERE id=?";
 
         try(Connection conn = DbConnection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -71,16 +71,16 @@ public class PageDaoImpl implements PageDao {
     }
 
     @Override
-    public Page findOne(int id){
+    public Page findOne(String id){
 
         Page page = null;
 
-        String sql="SELECT id, serialNumber, recordId, path FROM client WHERE id=?";
+        String sql="SELECT id, serialNumber, recordId, path FROM pages WHERE id=?";
 
         try(Connection conn = DbConnection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);
         ){
-            stmt.setInt(1,id);
+            stmt.setString(1,id);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()){
                 String pageId = rs.getObject("id",String.class);

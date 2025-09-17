@@ -9,11 +9,11 @@ public class Main {
                 Settings.PROCESSED_PDF_DIRECTORY,
                 Settings.TXT_DIRECTORY);
 
-            String usbId=pdf.saveInfoUsb(1);
-            String recordId=pdf.saveRecord("Registro 1","Informacion de un registro",1,usbId);
-            UsbDaoImpl usbDaoImpl = new UsbDaoImpl();
-            String pdfPassword=usbDaoImpl.findOne(usbId).getPdfPassword();
-
-        pdf.processPdfs(recordId,pdfPassword);
+        try {
+            byte[] pdfByte = pdf.fromTxtToPdf("321bc531-3a4f-4b");
+            System.out.println(pdfByte);
+        } catch (Exception e){
+            System.out.println("Ocurrio un error");
+        }
     }
 }
