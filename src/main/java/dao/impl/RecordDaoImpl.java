@@ -65,7 +65,12 @@ public class RecordDaoImpl implements RecordDao {
             stmt.setString(3,record.getDescription());
             stmt.setInt(4,record.getClientId());
             stmt.setString(5,record.getUsbId());
-
+            int rowAffected = stmt.executeUpdate();
+            if (rowAffected > 0 ){
+                System.out.println("Se guardo el registro");
+            } else {
+                System.out.println("No se pudo guardar el registro");
+            }
         }catch (Exception e) {
             System.out.println(e.toString());
             System.out.println(e.toString());

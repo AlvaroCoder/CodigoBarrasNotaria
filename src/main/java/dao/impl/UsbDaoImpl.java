@@ -54,6 +54,7 @@ public class UsbDaoImpl implements UsbDao {
         String sql = "INSERT INTO usb(id,clientId,creationDate, lastModifiedDate, pdfPassword) VALUES(?,?,?,?,?)";
         try(Connection conn= DbConnection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);
+
         ) {
             stmt.setString(1,usb.getId());
             stmt.setInt(2,usb.getClientId());
@@ -61,10 +62,16 @@ public class UsbDaoImpl implements UsbDao {
             stmt.setTimestamp(4,Timestamp.valueOf(usb.getLastModifiedDate()));
             stmt.setString(5,usb.getPdfPassword());
 
+            int rowsAffected = stmt.executeUpdate();
 
+            if (rowsAffected > 0) {
+                System.out.println("USB guardado correctamente en la base de datos.");
+            } else {
+                System.out.println("No se insertó ningún registro.");
+            }
 
         }catch (Exception e){
-            System.out.println(e.toString());
+            System.out.println("e = " + e);
         }
 
     }

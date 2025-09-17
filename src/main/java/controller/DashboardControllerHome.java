@@ -37,7 +37,12 @@ public class DashboardControllerHome {
             Pdf pdf = new Pdf(inputDir, outputDirPdf, outputDirTxt);
 
             String usbId = pdf.saveInfoUsb(1);
-            String recordId = pdf.saveRecord("Registro 1", "Información de un registro", 1, usbId);
+            System.out.println("usbId = " + usbId);
+            String recordId = pdf.saveRecord(
+                    "Registro 1",
+                    "Información de un registro",
+                    1, usbId);
+            System.out.println("recordId = " + recordId);
             UsbDaoImpl usbDaoImpl = new UsbDaoImpl();
             String pdfPassword = usbDaoImpl.findOne(usbId).getPdfPassword();
 
