@@ -26,6 +26,12 @@ public class Pdf {
     private final String processedPdfDirectory;
     private final String txtDirectory;
 
+    public Pdf(){
+        this.pdfDirectory = "";
+        this.processedPdfDirectory = "";
+        this.txtDirectory = "";
+    }
+
     public Pdf(String pdfDirectory,String processedPdfDirectory, String txtDirectory){
         this.pdfDirectory=pdfDirectory;
         this.processedPdfDirectory=processedPdfDirectory;

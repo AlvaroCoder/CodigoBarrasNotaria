@@ -33,7 +33,6 @@
                 <TextField fx:id="txtOutputDirTxt" promptText="Ingrese la ruta donde se guardarán los archivos (.TXT)"
                            prefWidth="400"/>
             </VBox>
-            <!-- Botón procesar -->
             <Button fx:id="btnProcess"
                     text="⚡ Procesar documentos"
                     style="-fx-font-size: 16px; -fx-background-color: #0C1019; -fx-text-fill: white; -fx-padding: 12 24;"/>

@@ -28,18 +28,25 @@
 
     <Pane HBox.hgrow="ALWAYS" />
     <HBox alignment="CENTER" spacing="25">
-        <Button
+        <!--<Button
                 text="Clientes"
                 onAction="#handleClienteClick"
                 styleClass="nav-link"/>
-        <Button
+                <Button
                 text="Documentos"
                 onAction="#handleDocumentClick"
                 styleClass="nav-link"/>
+                -->
+        <Button
+            text="Generar Pdf"
+            onAction="#handleClickGenerarPdf"
+            styleClass="nav-link"
+        />
         <Button
                 text="USBs"
                 onAction="#handleUsbClick"
                 styleClass="nav-link"/>
+
     </HBox>
     <Pane HBox.hgrow="ALWAYS" />
     <HBox alignment="CENTER_RIGHT" spacing="10">

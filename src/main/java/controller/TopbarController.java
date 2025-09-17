@@ -25,21 +25,26 @@ public class TopbarController {
 
     @FXML
     private void handleClienteClick() {
-        dashboardController.loadView("/fxml/clientView.fxml");
+        dashboardController.loadView("/fxml/dashboard/clientView.fxml");
     }
 
     @FXML
     private void handleDocumentClick(){
-        dashboardController.loadView("/fxml/documentView.fxml");
+        dashboardController.loadView("/fxml/dashboard/documentView.fxml");
     }
 
     @FXML
     private void handleUsbClick(){
-        dashboardController.loadView("/fxml/usbView.fxml");
+        dashboardController.loadView("/fxml/dashboard/usbView.fxml");
     }
 
     @FXML
     private void handleClickHome(){
-        dashboardController.loadView("/fxml/homeView.fxml");
+        dashboardController.loadView("/fxml/dashboard/homeView.fxml");
+    }
+
+    @FXML
+    private void handleClickGenerarPdf(){
+        dashboardController.loadView("/fxml/dashboard/pdfView.fxml");
     }
 }
