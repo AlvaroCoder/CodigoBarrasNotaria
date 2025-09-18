@@ -102,6 +102,35 @@ public class UsbDaoImpl implements UsbDao {
         }
 
         return usb;
+    }
 
+    @Override
+    public List<Usb> findByIdClient(int idClient) {
+        List<Usb> usbs = new ArrayList<>();
+        String sql = "SELECT usb.id, c.username, usb.creationDate, usb.lastModifiedDate " +
+                "FROM usb " +
+                "INNER JOIN client c ON usb.clientId = c.id " +
+                "WHERE c.id = ?";
+
+        try (Connection conn = DbConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idClient);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String id = rs.getString("id");
+                    String username = rs.getString("username");
+                    LocalDateTime creationDate = rs.getTimestamp("creationDate").toLocalDateTime();
+                    LocalDateTime lastModifiedDate = rs.getTimestamp("lastModifiedDate").toLocalDateTime();
+
+                    usbs.add(new Usb(id, username, creationDate, lastModifiedDate));
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error en findByIdClient: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return usbs;
     }
 }

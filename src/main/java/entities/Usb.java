@@ -8,6 +8,7 @@ public class Usb {
     private LocalDateTime creationDate;
     private LocalDateTime lastModifiedDate;
     private String pdfPassword;
+    private String clientUsername;
 
     public Usb(String id, Integer clientId, LocalDateTime creationDate, LocalDateTime lastModifiedDate, String pdfPassword){
         this.id=id;
@@ -17,15 +18,25 @@ public class Usb {
         this.pdfPassword=pdfPassword;
     }
 
+    public Usb(String id, String clientUsername, LocalDateTime creationDate, LocalDateTime lastModifiedDate){
+        this.id=id;
+        this.clientUsername=clientUsername;
+        this.creationDate=creationDate;
+        this.lastModifiedDate=lastModifiedDate;
+    }
+
     public Usb(String id, Integer clientId, LocalDateTime creationDate, LocalDateTime lastModifiedDate){
         this(id,clientId,creationDate,lastModifiedDate,null);
     }
 
+
+
     @Override
     public String toString(){
-        return String.format("Usb(id=%s,clientId=%d,creationDate=%s,lastModifiedDate=%s)",
+        return String.format("Usb(id=%s,clientId=%d, usernameClient=%s,creationDate=%s,lastModifiedDate=%s)",
                 getId(),
                 getClientId(),
+                getClientUsername(),
                 getCreationDate(),
                 getLastModifiedDate());
     }
@@ -68,5 +79,13 @@ public class Usb {
 
     public void setPdfPassword(String pdfPassword) {
         this.pdfPassword = pdfPassword;
+    }
+
+    public String getClientUsername() {
+        return clientUsername;
+    }
+
+    public void setClientUsername(String clientUsername) {
+        this.clientUsername = clientUsername;
     }
 }

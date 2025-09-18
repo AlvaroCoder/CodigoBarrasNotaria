@@ -25,6 +25,9 @@ public class DashboardControllerPdf {
     private TextField txtClaveId;
 
     @FXML
+    private TextField txtContrasennadPdf;
+
+    @FXML
     private Button btnGenerarPdf;
 
     @FXML
@@ -39,12 +42,15 @@ public class DashboardControllerPdf {
     private void handleClickGeneratePdf(){
         try{
             String id = txtClaveId.getText();
+            String passwordPdf = txtContrasennadPdf.getText();
+
             Pdf pdf = new Pdf();
-            byte[] pdfByte = pdf.fromTxtToPdf(id,"1234");
-            System.out.println("pdfByte = " + pdfByte);
+            byte[] pdfByte = pdf.fromTxtToPdf(id,passwordPdf);
+
             Path tempFile = Files.createTempFile("pdfPreview_",".pdf");
             Files.write(tempFile, pdfByte);
             renderPreviewPdf(tempFile);
+
             System.out.println("PDF generado en : "+tempFile.toAbsolutePath());
             showAlert(Alert.AlertType.INFORMATION, "Exito", "Se genero el PDF con exitos");
         } catch (Exception e){
@@ -52,6 +58,7 @@ public class DashboardControllerPdf {
             showAlert(Alert.AlertType.ERROR, "Error al generar el PDF", e.getMessage());
         }
     }
+
 
     private void renderPreviewPdf(Path pathPdf){
         try (PDDocument document = PDDocument.load(pathPdf.toFile())){

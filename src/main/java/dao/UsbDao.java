@@ -9,4 +9,5 @@ public interface UsbDao {
     Usb findOne(String id);
     List<Usb> findMany();
     void deleteOne(int id);
+    List<Usb> findByIdClient(int idClient);
 }
