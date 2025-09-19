@@ -44,7 +44,7 @@ public class AdminDaoImpl implements AdminDao {
                 admins.add(new Admin(id,username));
             }
         }catch (Exception e){
-            System.out.println(e.toString());
+            return admins;
         }
 
         return admins;
@@ -95,10 +95,51 @@ public class AdminDaoImpl implements AdminDao {
             }
 
         }catch (Exception e){
-            System.out.println(e.toString());
+            return null;
+        }
+        return admin;
+    }
+
+    @Override
+    public Admin findOne(String username) throws Exception{
+        Admin admin = null;
+        String sql = "SELECT id, username FROM admin WHERE username = ?";
+
+        try(Connection conn = DbConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+        ){
+            stmt.setString(1,username);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()){
+                Integer id = rs.getObject("id",Integer.class);
+                admin = new Admin(id,username);
+            }
+
+        } catch (Exception e){
+            return null;
         }
 
         return admin;
+    }
 
+    @Override
+    public Admin findOneDb(String username) throws Exception{
+        Admin admin = null;
+        String sql = "SELECT id, username, password FROM admin WHERE username = ?";
+        try(Connection conn = DbConnection.getConnection();
+            PreparedStatement stmt =  conn.prepareStatement(sql);
+        ){
+            stmt.setString(1,username);
+            ResultSet rs=stmt.executeQuery();
+
+            if (rs.next()){
+                Integer id = rs.getObject("id",Integer.class);
+                String password = rs.getObject("password",String.class);
+                admin = new Admin(id,username,password);
+            } else{
+                return null;
+            }
+        }
+        return admin;
     }
 }

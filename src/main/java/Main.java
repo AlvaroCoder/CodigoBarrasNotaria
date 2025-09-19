@@ -1,15 +1,19 @@
 import config.Settings;
 import dao.impl.UsbDaoImpl;
 import entities.Pdf;
+import model.AuthModel;
 
 public class Main {
     public static void main(String[] args) {
-        Pdf pdf = new Pdf();
-        try {
-            byte[] pdfByte = pdf.fromTxtToPdf("321bc531-3a4f-4b","ead38daf-e131-44");
-            System.out.println(pdfByte);
+        try{
+            //AuthModel.adminRegister("will2","hola123");
+            //boolean start=AuthModel.adminLogin("will2","");
+            //System.out.println(start);
+//            AuthModel.clientRegister("87654321","hola123",
+//                    "William","Macalupu");
+            System.out.println(AuthModel.clientLogin("87654321","hola123"));
         } catch (Exception e){
-            System.out.println("Ocurrio un error");
+            System.out.println(e.toString());
         }
     }
 }

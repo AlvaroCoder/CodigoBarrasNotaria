@@ -15,6 +15,10 @@ public class Admin {
         this(id,username,null);
     }
 
+    public Admin(String username, String password){
+        this(null,username,password);
+    }
+
     @Override
     public String toString(){
         return String.format("Admin(id=%d,username=%s)",getId(),getUsername());
