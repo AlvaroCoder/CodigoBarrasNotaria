@@ -11,7 +11,7 @@ public class Login extends Application   {
     @Override
     public void start(Stage stage) throws Exception {
         stage.setTitle("Inicio de Sesion del Usuario");
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/authentication/login.fxml"));
         BorderPane root = loader.load();
 
         Scene scene = new Scene(root, 800, 500);
