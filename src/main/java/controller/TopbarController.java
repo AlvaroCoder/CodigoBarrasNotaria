@@ -3,6 +3,7 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import model.SessionModel;
 
 public class TopbarController {
     private DashboardController dashboardController;
@@ -16,7 +17,7 @@ public class TopbarController {
     @FXML
     private void  initialize(){
         topBar.getStylesheets().add(getClass().getResource("/css/topbar.css").toExternalForm());
-        txtDashboard.setText("Usuario1");
+        loadAdminInfo();
     }
 
     public void setDashboardController(DashboardController dashboardController){
@@ -46,5 +47,15 @@ public class TopbarController {
     @FXML
     private void handleClickGenerarPdf(){
         dashboardController.loadView("/fxml/dashboard/pdfView.fxml");
+    }
+
+    @FXML
+    private void handleRegistroClick(){
+        dashboardController.loadView("/fxml/dashboard/pagesRegister.fxml");
+    }
+
+    public void loadAdminInfo(){
+        String username = SessionModel.getUsername();
+        txtDashboard.setText(username);
     }
 }
