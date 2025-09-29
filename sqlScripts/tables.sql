@@ -3,7 +3,7 @@ CREATE SCHEMA notaria_secret_proyect;
 CREATE TABLE client(
 	id INT AUTO_INCREMENT PRIMARY KEY,
     dni CHAR(8),
-    password VARCHAR(50),
+    password VARCHAR(100),
     email VARCHAR(100),
     first_name VARCHAR(50),
     last_name VARCHAR(50)
@@ -34,26 +34,29 @@ CREATE TABLE usb(
     creation_date DATETIME,
     last_modified_date DATETIME,
     pdf_password VARCHAR(250),
+    path VARCHAR(250),
 	FOREIGN KEY (client_id) REFERENCES client(id)
 );
 
-CREATE TABLE file(
+CREATE TABLE record(
 	id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50),
     description VARCHAR(250),
-    id_usb INT,
+    usb_id INT,
     creation_date DATETIME,
     last_modified_date DATETIME,
-    FOREIGN KEY(id_usb) REFERENCES usb(id)
+    path VARCHAR(250),
+    FOREIGN KEY(usb_id) REFERENCES usb(id)
 );
 
 CREATE TABLE section(
 	id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50),
-    file_id INT,
+    record_id INT,
     creation_date DATETIME,
     last_modified_date DATETIME,
-    FOREIGN KEY(file_id) REFERENCES file(id)
+    path VARCHAR(250),
+    FOREIGN KEY(record_id) REFERENCES record(id)
 );
 
 CREATE TABLE page(

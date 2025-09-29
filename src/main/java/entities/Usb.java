@@ -3,49 +3,55 @@ package entities;
 import java.time.LocalDateTime;
 
 public class Usb {
-    private String id;
+    private Integer id;
+    private String description;
     private Integer clientId;
     private LocalDateTime creationDate;
     private LocalDateTime lastModifiedDate;
     private String pdfPassword;
-    private String clientUsername;
+    private String path;
 
-    public Usb(String id, Integer clientId, LocalDateTime creationDate, LocalDateTime lastModifiedDate, String pdfPassword){
+    public Usb(Integer id, String description,
+               Integer clientId, LocalDateTime creationDate,
+               LocalDateTime lastModifiedDate, String pdfPassword,
+               String path){
         this.id=id;
+        this.description=description;
         this.clientId=clientId;
         this.creationDate=creationDate;
         this.lastModifiedDate=lastModifiedDate;
         this.pdfPassword=pdfPassword;
+        this.path=path;
     }
 
-    public Usb(String id, String clientUsername, LocalDateTime creationDate, LocalDateTime lastModifiedDate){
-        this.id=id;
-        this.clientUsername=clientUsername;
-        this.creationDate=creationDate;
-        this.lastModifiedDate=lastModifiedDate;
+    public Usb(Integer id, String description, LocalDateTime creationDate, LocalDateTime lastModifiedDate,String path){
+        this(id,description,null,creationDate,lastModifiedDate,null,path);
     }
 
-    public Usb(String id, Integer clientId, LocalDateTime creationDate, LocalDateTime lastModifiedDate){
-        this(id,clientId,creationDate,lastModifiedDate,null);
+    public Usb(Integer id, String description,Integer clientId, LocalDateTime creationDate, LocalDateTime lastModifiedDate,String path){
+        this(id,description,clientId,creationDate,lastModifiedDate,null,path);
     }
 
-
+    public Usb(String description,Integer clientId,LocalDateTime creationDate, LocalDateTime lastModifiedDate, String pdfPassword, String path){
+        this(null,description,clientId,creationDate,lastModifiedDate,pdfPassword,path);
+    }
 
     @Override
     public String toString(){
-        return String.format("Usb(id=%s,clientId=%d, usernameClient=%s,creationDate=%s,lastModifiedDate=%s)",
+        return String.format("Usb(id=%s,description=%s,clientId=%s,creationDate=%s,lastModifiedDate=%s,path=%s)",
                 getId(),
+                getDescription(),
                 getClientId(),
-                getClientUsername(),
                 getCreationDate(),
-                getLastModifiedDate());
+                getLastModifiedDate(),
+                getPath());
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -81,11 +87,19 @@ public class Usb {
         this.pdfPassword = pdfPassword;
     }
 
-    public String getClientUsername() {
-        return clientUsername;
+    public String getDescription() {
+        return description;
     }
 
-    public void setClientUsername(String clientUsername) {
-        this.clientUsername = clientUsername;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }

@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ClientDaoImpl implements ClientDao {
@@ -32,21 +33,21 @@ public class ClientDaoImpl implements ClientDao {
     public List<Client> findMany() throws Exception{
         ArrayList<Client> clients = new ArrayList<>();
 
-        String sql = "SELECT id, dni FROM client";
+        String sql = "SELECT id, dni, email, first_name, last_name FROM client";
 
         try(Connection conn = DbConnection.getConnection();
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
         ){
             while (rs.next()){
-                Integer id =rs.getObject("id",Integer.class);
-                String dni =  rs.getObject("dni",String.class);
-                String firstName = rs.getObject("firstName",String.class);
-                String lastName = rs.getObject("lastName",String.class);
-                clients.add(new Client(id,dni,firstName,lastName));
+                clients.add(new Client(rs.getObject("id",Integer.class),
+                        rs.getObject("dni",String.class),
+                        rs.getObject("firstName",String.class),
+                        rs.getObject("lastName",String.class),
+                        rs.getObject("email",String.class)));
             }
         }catch (Exception e){
-            return clients;
+            return Collections.emptyList();
         }
 
         return clients;
@@ -54,15 +55,16 @@ public class ClientDaoImpl implements ClientDao {
 
     @Override
     public Integer insertOne(Client client) throws Exception{
-        String sql = "INSERT INTO client(dni,password,firstName,lastName) VALUES(?,?,?,?)";
+        String sql = "INSERT INTO client(dni,password,first_name,last_name,email) VALUES(?,?,?,?,?)";
         Integer id=null;
         try(Connection conn= DbConnection.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql);
+            PreparedStatement stmt = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
         ) {
             stmt.setString(1,client.getDni());
             stmt.setString(2,client.getPassword());
             stmt.setString(3,client.getFirstName());
             stmt.setString(4,client.getLastName());
+            stmt.setString(5,client.getEmail());
 
             int records = stmt.executeUpdate();
 
@@ -85,7 +87,7 @@ public class ClientDaoImpl implements ClientDao {
 
         Client client = null;
 
-        String sql="SELECT id, dni, firstName, lastName FROM client WHERE id=?";
+        String sql="SELECT dni,first_name,last_name,email FROM client WHERE id=?";
 
         try(Connection conn = DbConnection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -93,24 +95,23 @@ public class ClientDaoImpl implements ClientDao {
             stmt.setInt(1,id);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()){
-                String dni = rs.getObject("dni",String.class);
-                String firstName = rs.getObject("firstName",String.class);
-                String lastName = rs.getObject("lastName",String.class);
-                client = new Client((Integer) id,dni,firstName,lastName);
+                client = new Client(id,
+                        rs.getObject("dni",String.class),
+                        rs.getObject("first_name",String.class),
+                        rs.getObject("last_name",String.class),
+                        rs.getObject("email",String.class));
             }
 
         }catch (Exception e){
             return null;
         }
-
         return client;
-
     }
 
     @Override
     public Client findOne(String dni) throws Exception{
         Client client = null;
-        String sql = "SELECT id,firstName,lastName FROM client WHERE dni = ?";
+        String sql = "SELECT id,first_name,last_name,email FROM client WHERE dni = ?";
 
         try(Connection conn = DbConnection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -118,10 +119,11 @@ public class ClientDaoImpl implements ClientDao {
             stmt.setString(1,dni);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()){
-                Integer id=rs.getObject("id",Integer.class);
-                String firstName = rs.getObject("firstName",String.class);
-                String lastName = rs.getObject("lastName",String.class);
-                client = new Client(id,dni,firstName,lastName);
+                client = new Client(rs.getObject("id",Integer.class),
+                        dni,
+                        rs.getObject("first_name",String.class),
+                        rs.getObject("last_name",String.class),
+                        rs.getObject("email",String.class));
             }
 
         }catch (Exception e){
@@ -135,7 +137,7 @@ public class ClientDaoImpl implements ClientDao {
 
         Client client = null;
 
-        String sql="SELECT id, password, firstName, lastName FROM client WHERE dni=?";
+        String sql="SELECT id,password,first_name,last_name,email FROM client WHERE dni=?";
 
         try(Connection conn = DbConnection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -143,17 +145,16 @@ public class ClientDaoImpl implements ClientDao {
             stmt.setString(1,dni);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()){
-                Integer id = rs.getObject("id",Integer.class);
-                String password = rs.getObject("password",String.class);
-                String firstName = rs.getObject("firstName",String.class);
-                String lastName = rs.getObject("lastName",String.class);
-                client = new Client(id,dni,password,firstName,lastName);
+                client = new Client(rs.getObject("id",Integer.class),
+                        dni,
+                        rs.getObject("password",String.class),
+                        rs.getObject("first_name",String.class),
+                        rs.getObject("last_name",String.class),
+                        rs.getObject("email",String.class));
             }
-
         }catch (Exception e){
             return null;
         }
-
         return client;
     }
 

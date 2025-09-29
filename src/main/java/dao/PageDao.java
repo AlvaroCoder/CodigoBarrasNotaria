@@ -8,8 +8,8 @@ public interface PageDao {
     //POST
     String insertOne(Page page);
     //GET
-    Page findOne(String id);
-    List<Page> findMany();
+    Page findOne(String serialNumber);
+    List<Page> findMany(int sectionId);
     //DELETE
-    void deleteOne(int id);
+    void deleteOne(int id) throws Exception;
 }

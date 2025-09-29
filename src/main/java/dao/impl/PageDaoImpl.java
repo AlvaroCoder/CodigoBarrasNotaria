@@ -9,12 +9,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class PageDaoImpl implements PageDao {
     @Override
-    public void deleteOne(int id){
-        String sql = "DELETE FROM pages WHERE id=?";
+    public void deleteOne(int id) throws Exception{
+        String sql = "DELETE FROM page WHERE id=?";
 
         try(Connection conn = DbConnection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -22,49 +23,46 @@ public class PageDaoImpl implements PageDao {
             stmt.setInt(1,id);
             stmt.executeUpdate();
         }catch (Exception e){
-            System.out.println(e.toString());
+            throw new Exception("Hubo un error para eliminar la pagina.");
         }
 
     }
 
     @Override
-    public List<Page> findMany(){
+    public List<Page> findMany(int sectionId){
         ArrayList<Page> clients = new ArrayList<>();
 
-        String sql = "SELECT id, serialNumber, recordId, path FROM pages";
+        String sql = "SELECT id, serial_number, path FROM page WHERE section_id=?";
 
         try(Connection conn = DbConnection.getConnection();
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
+            PreparedStatement stmt = conn.prepareStatement(sql);
         ){
+            stmt.setInt(1,sectionId);
+            ResultSet rs =stmt.executeQuery();
+
             while (rs.next()){
-                String id =rs.getObject("id",String.class);
-                String serialNumber =  rs.getObject("serialNumber",String.class);
-                String recordId=rs.getObject("recordId",String.class);
-                String path = rs.getObject("path",String.class);
-                clients.add(new Page(id,serialNumber,recordId,path));
+                clients.add(new Page(rs.getObject("id",Integer.class),
+                        rs.getObject("serial_number",String.class),
+                        sectionId,
+                        rs.getObject("path",String.class)));
             }
         }catch (Exception e){
-            System.out.println(e.toString());
+            return Collections.emptyList();
         }
-
         return clients;
     }
 
     @Override
     public String insertOne(Page page){
-        String sql = "INSERT INTO pages(id,serialNumber,recordId,path) VALUES(?,?,?,?)";
+        String sql = "INSERT INTO page(serial_number,section_id,path) VALUES(?,?,?)";
         String id=null;
         try(Connection conn= DbConnection.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql);
+            PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         ) {
-            stmt.setString(1,page.getId());
-            stmt.setString(2,page.getSerialNumber());
-            stmt.setString(3,page.getRecordId());
-            stmt.setString(4,page.getPath());
-
+            stmt.setString(1,page.getSerialNumber());
+            stmt.setInt(2,page.getSectionId());
+            stmt.setString(3,page.getPath());
             int records = stmt.executeUpdate();
-
             if (records>0){
                 try(ResultSet rs = stmt.getGeneratedKeys()){
                     if(rs.next()){
@@ -72,37 +70,34 @@ public class PageDaoImpl implements PageDao {
                     }
                 }
             }
-
         }catch (Exception e){
-            System.out.println(e.toString());
+            return null;
         }
         return id;
     }
 
     @Override
-    public Page findOne(String id){
+    public Page findOne(String serialNumber){
 
         Page page = null;
 
-        String sql="SELECT id, serialNumber, recordId, path FROM pages WHERE id=?";
+        String sql="SELECT id, section_id, path FROM page WHERE serial_number=?";
 
         try(Connection conn = DbConnection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);
         ){
-            stmt.setString(1,id);
+            stmt.setString(1,serialNumber);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()){
-                String pageId = rs.getObject("id",String.class);
-                String serialNumber = rs.getObject("serialNumber",String.class);
-                String recordId = rs.getObject("recordId",String.class);
-                String path = rs.getObject("path",String.class);
-                page = new Page(pageId,serialNumber,recordId,path);
+                page = new Page(rs.getObject("id",Integer.class),
+                        serialNumber,
+                        rs.getObject("section_id",Integer.class),
+                        rs.getObject("path",String.class));
             }
 
         }catch (Exception e){
-            System.out.println(e.toString());
+            return null;
         }
-
         return page;
 
     }

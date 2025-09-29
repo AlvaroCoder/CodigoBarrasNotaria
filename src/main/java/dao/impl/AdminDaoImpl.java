@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class AdminDaoImpl implements AdminDao {
@@ -32,33 +33,33 @@ public class AdminDaoImpl implements AdminDao {
     public List<Admin> findMany(){
         ArrayList<Admin> admins = new ArrayList<>();
 
-        String sql = "SELECT id, username FROM admin";
+        String sql = "SELECT id,username,email FROM admin";
 
         try(Connection conn = DbConnection.getConnection();
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
         ){
             while (rs.next()){
-                Integer id =rs.getObject("id",Integer.class);
-                String username =  rs.getObject("username",String.class);
-                admins.add(new Admin(id,username));
+                admins.add(new Admin(rs.getObject("id",Integer.class),
+                        rs.getObject("username",String.class),
+                        rs.getObject("email",String.class)));
             }
         }catch (Exception e){
-            return admins;
+            return Collections.emptyList();
         }
-
         return admins;
     }
 
     @Override
     public Integer insertOne(Admin admin){
-        String sql = "INSERT INTO admin(username,password) VALUES(?,?)";
+        String sql = "INSERT INTO admin(username,password,email) VALUES(?,?,?)";
         Integer id = null;
         try(Connection conn= DbConnection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         ) {
             stmt.setString(1,admin.getUsername());
             stmt.setString(2,admin.getPassword());
+            stmt.setString(3,admin.getEmail());
 
             int records = stmt.executeUpdate();
 
@@ -70,7 +71,7 @@ public class AdminDaoImpl implements AdminDao {
                 }
             }
         }catch (Exception e){
-            System.out.println(e.toString());
+            return null;
         }
         return id;
     }
@@ -80,7 +81,7 @@ public class AdminDaoImpl implements AdminDao {
 
         Admin admin = null;
 
-        String sql="SELECT id, username, password FROM admin WHERE id=?";
+        String sql="SELECT username,email FROM admin WHERE id=?";
 
         try(Connection conn = DbConnection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -88,10 +89,9 @@ public class AdminDaoImpl implements AdminDao {
             stmt.setInt(1,id);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()){
-                Integer adminId = rs.getObject("id",Integer.class);
                 String username = rs.getObject("username",String.class);
-                String password = rs.getObject("password",String.class);
-                admin = new Admin(adminId,username,password);
+                String password = rs.getObject("email",String.class);
+                admin = new Admin(id,username,password);
             }
 
         }catch (Exception e){
@@ -103,7 +103,7 @@ public class AdminDaoImpl implements AdminDao {
     @Override
     public Admin findOne(String username) throws Exception{
         Admin admin = null;
-        String sql = "SELECT id, username FROM admin WHERE username = ?";
+        String sql = "SELECT id, email FROM admin WHERE username = ?";
 
         try(Connection conn = DbConnection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -111,8 +111,9 @@ public class AdminDaoImpl implements AdminDao {
             stmt.setString(1,username);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()){
-                Integer id = rs.getObject("id",Integer.class);
-                admin = new Admin(id,username);
+                admin = new Admin(rs.getObject("id",Integer.class),
+                        username,
+                        rs.getObject("email",String.class));
             }
 
         } catch (Exception e){
@@ -125,7 +126,7 @@ public class AdminDaoImpl implements AdminDao {
     @Override
     public Admin findOneDb(String username) throws Exception{
         Admin admin = null;
-        String sql = "SELECT id, username, password FROM admin WHERE username = ?";
+        String sql = "SELECT id, password, email FROM admin WHERE username = ?";
         try(Connection conn = DbConnection.getConnection();
             PreparedStatement stmt =  conn.prepareStatement(sql);
         ){
@@ -133,9 +134,10 @@ public class AdminDaoImpl implements AdminDao {
             ResultSet rs=stmt.executeQuery();
 
             if (rs.next()){
-                Integer id = rs.getObject("id",Integer.class);
-                String password = rs.getObject("password",String.class);
-                admin = new Admin(id,username,password);
+                admin = new Admin(rs.getObject("id",Integer.class),
+                        username,
+                        rs.getObject("password",String.class),
+                        rs.getObject("email",String.class));
             } else{
                 return null;
             }

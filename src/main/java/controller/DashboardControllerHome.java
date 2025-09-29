@@ -1,7 +1,7 @@
 package controller;
 
 import dao.impl.UsbDaoImpl;
-import entities.Pdf;
+import entities.PDF;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -33,25 +33,25 @@ public class DashboardControllerHome {
             showAlert(Alert.AlertType.WARNING, "Campos vacios", "Ingresa todas las rutas");
             return;
         }
-        try {
-            Pdf pdf = new Pdf(inputDir, outputDirPdf, outputDirTxt);
-
-            String usbId = pdf.saveInfoUsb(1);
-            System.out.println("usbId = " + usbId);
-            String recordId = pdf.saveRecord(
-                    "Registro 1",
-                    "Información de un registro",
-                    1, usbId);
-            System.out.println("recordId = " + recordId);
-            UsbDaoImpl usbDaoImpl = new UsbDaoImpl();
-            String pdfPassword = usbDaoImpl.findOne(usbId).getPdfPassword();
-
-            pdf.processPdfs(recordId, pdfPassword);
-
-            showAlert(Alert.AlertType.INFORMATION, "Éxito", "Se procesó la información correctamente.");
-        } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Error al procesar", "Ocurrió un error: " + e.getMessage());
-        }
+//        try {
+//            Pdf pdf = new Pdf(inputDir, outputDirPdf, outputDirTxt);
+//
+//            String usbId = pdf.saveInfoUsb(1);
+//            System.out.println("usbId = " + usbId);
+//            String recordId = pdf.saveRecord(
+//                    "Registro 1",
+//                    "Información de un registro",
+//                    1, usbId);
+//            System.out.println("recordId = " + recordId);
+//            UsbDaoImpl usbDaoImpl = new UsbDaoImpl();
+//            String pdfPassword = usbDaoImpl.findOne(usbId).getPdfPassword();
+//
+//            pdf.processPdfs(recordId, pdfPassword);
+//
+//            showAlert(Alert.AlertType.INFORMATION, "Éxito", "Se procesó la información correctamente.");
+//        } catch (Exception e) {
+//            showAlert(Alert.AlertType.ERROR, "Error al procesar", "Ocurrió un error: " + e.getMessage());
+//        }
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {

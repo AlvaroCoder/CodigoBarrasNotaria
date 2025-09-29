@@ -1,0 +1,225 @@
+package entities;
+
+import com.itextpdf.barcodes.Barcode128;
+import com.itextpdf.kernel.pdf.*;
+import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Image;
+import config.Settings;
+import dao.impl.RecordDaoImpl;
+import dao.impl.PageDaoImpl;
+import dao.impl.SectionDaoImpl;
+import dao.impl.UsbDaoImpl;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.util.Base64;
+import java.util.UUID;
+
+public class PDF {
+    private final String pdfDirectory;
+    private final String processedPdfDirectory;
+    private final String txtDirectory;
+
+    public PDF(String pdfDirectory,String processedPdfDirectory, String txtDirectory){
+        this.pdfDirectory=pdfDirectory;
+        this.processedPdfDirectory=processedPdfDirectory;
+        this.txtDirectory=txtDirectory;
+    }
+
+    public static byte[] fromTxtToPdf(String serialNumber, String password) throws Exception {
+        PageDaoImpl pageDaoImpl = new PageDaoImpl();
+        Page page =pageDaoImpl.findOne(serialNumber);
+        String txtPath= Settings.MAIN_DIRECTORY;
+        try{
+            txtPath=txtPath.concat("/"+page.getPath());
+        } catch (Exception e){
+            throw new Exception("Número de serie incorrecto.");
+        }
+        String txtBase64 = new String(Files.readAllBytes(Paths.get(txtPath)));
+        byte[] pdfBytes = Base64.getDecoder().decode(txtBase64);
+        ReaderProperties props = new ReaderProperties().setPassword(password==null?null:password.getBytes());
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        try (PdfReader reader = new PdfReader(new ByteArrayInputStream(pdfBytes),props);
+            PdfWriter writer = new PdfWriter(baos);
+            PdfDocument pdfDoc = new PdfDocument(reader,writer);
+            ){
+            int pages = pdfDoc.getNumberOfPages();
+        } catch (Exception e){
+            throw new Exception("Contraseña incorrecta.");
+        }
+        return baos.toByteArray();
+    }
+
+    public Integer saveUsbInfo(Integer clientId,String description,String path,String pdfPassword){
+        LocalDateTime creationDate = LocalDateTime.now();
+        LocalDateTime lastModifiedDate = LocalDateTime.now();
+        UsbDaoImpl usbDaoImpl = new UsbDaoImpl();
+        return usbDaoImpl.insertOne(new Usb(description,clientId,creationDate,lastModifiedDate,pdfPassword,path));
+    }
+
+    public Integer saveRecordInfo(String name, String description, int usbId,String path){
+        RecordDaoImpl recordDaoImpl = new RecordDaoImpl();
+        LocalDateTime creationDate = LocalDateTime.now();
+        LocalDateTime lastModifiedDate = LocalDateTime.now();
+
+        return recordDaoImpl.insertOne(new Record(name,description,usbId,creationDate,lastModifiedDate,path));
+    }
+
+    public Integer saveSectionInfo(String name, int recordId,String path){
+        SectionDaoImpl sectionDaoImpl = new SectionDaoImpl();
+        LocalDateTime creationDate = LocalDateTime.now();
+        LocalDateTime lastModifiedDate = LocalDateTime.now();
+
+        return sectionDaoImpl.insertOne(new Section(name,recordId,creationDate,lastModifiedDate,path));
+    }
+
+    public void savePageInfo(int sectionId, String path){
+        String serialNumber = UUID.randomUUID().toString().substring(0,16);
+        PageDaoImpl pageDaoImpl = new PageDaoImpl();
+        pageDaoImpl.insertOne(new Page(serialNumber,sectionId,path));
+    }
+
+    public void processPdf(File doc,File outputPdf,
+                           File outputTxt,WriterProperties props,
+                           File pathToDb, int sectionId) throws Exception{
+        try(PdfReader reader = new PdfReader(doc);
+            PdfWriter writer = new PdfWriter(outputPdf.getAbsolutePath(),props);
+            PdfDocument pdf = new PdfDocument(reader,writer);
+            Document document = new Document(pdf);
+        ){
+            //AGREGAR EL CODIGO DE BARRAS
+            Barcode128 barcode = new Barcode128(pdf);
+
+            String serialNumber=UUID.randomUUID().toString().substring(0,16);
+            barcode.setCode(serialNumber);//id
+
+            barcode.setFont(null);
+            barcode.setBarHeight(20);
+            barcode.setX(0.5f);
+
+
+            Image barcodeImage = new Image(barcode.createFormXObject(pdf));
+
+            int page = 1;
+            float x = 175;
+            float y = 10;
+
+            PdfCanvas canvas = new PdfCanvas(pdf.getPage(page));
+            barcodeImage.setFixedPosition(page,x,y);
+            document.add(barcodeImage);
+
+            //CONVERTIR A BYTES EL CONTENIDO DEL DOCUMENTO
+            document.close();
+
+            FileInputStream fis = new FileInputStream(outputPdf);
+            byte[] pdfBytes = new byte[(int) outputPdf.length()];
+            fis.read(pdfBytes);
+            fis.close();
+
+            String pdfBase64 = Base64.getEncoder().encodeToString(pdfBytes);
+            String txtName=doc.getName().split("\\.")[0]+".txt";
+
+            String txtPathToDb = new File(pathToDb,txtName).getPath().replace("\\","/");
+
+            try(FileWriter fw = new FileWriter(outputTxt)){
+                fw.write(pdfBase64);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
+            savePageInfo(sectionId,txtPathToDb);
+
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new Exception("Ocurrio un error procesando el pdf");
+        }
+    }
+
+
+    public void trackFiles(int clientId) throws Exception{
+
+        File principalPath= new File(getPdfDirectory()); //esto se debe cambiar
+        File processedPath = new File(getProcessedPdfDirectory());
+        File txtPath = new File(getTxtDirectory());
+
+        String pdfPassword = UUID.randomUUID().toString().substring(0,16);
+
+        WriterProperties props = new WriterProperties().setStandardEncryption(
+                pdfPassword.getBytes(StandardCharsets.UTF_8),
+                pdfPassword.getBytes(StandardCharsets.UTF_8),
+                EncryptionConstants.ALLOW_PRINTING,
+                EncryptionConstants.ENCRYPTION_AES_128
+        );
+
+        for (String proyectName:principalPath.list()){
+            File proyectPath = new File(principalPath,proyectName);
+            File proyectPathToDb = new File(proyectName);
+
+            File processedProyectPath = new File(processedPath,proyectName);
+            File txtProyectPath = new File(txtPath,proyectName);
+
+            if (!processedProyectPath.mkdir() || !txtProyectPath.mkdir()){
+                throw new Exception("Ocurrio un error al crear la carpeta proyecto");
+            }
+
+            Integer usbId =saveUsbInfo(clientId,null,proyectPathToDb.getPath(), pdfPassword);
+
+            for (String recordName: proyectPath.list()){
+                File recordPath = new File(proyectPath,recordName);
+                File recordPathToDb= new File(proyectPathToDb,recordName);
+
+                File processedRecordPath = new File(processedProyectPath,recordName);
+                File txtRecordPath = new File(txtProyectPath,recordName);
+
+                if (!processedRecordPath.mkdir() || !txtRecordPath.mkdir()){
+                    throw new Exception("Ocurrio un error al crear la carpeta expediente");
+                }
+
+                Integer recordId = saveRecordInfo(recordName,null,usbId,recordPathToDb.getPath().replace("\\","/"));
+
+                for (String sectionName:recordPath.list()){
+                    File sectionPath = new File(recordPath,sectionName);
+                    File sectionPathtoDb=new File(recordPathToDb,sectionName);
+
+                    File processedSectionPath = new File(processedRecordPath,sectionName);
+                    File txtSectionPath = new File(txtRecordPath,sectionName);
+
+                    if (!processedSectionPath.mkdir() || !txtSectionPath.mkdir()){
+                        throw new Exception("Ocurrio un error al crear la carpeta seccion");
+                    }
+
+                    Integer sectionId=saveSectionInfo(sectionName,recordId,sectionPathtoDb.getPath().replace("\\","/"));
+
+                    File[] docs = sectionPath.listFiles((dir,name)->name.toLowerCase().endsWith(".pdf"));
+                    if (docs !=null){
+                        for (File doc: docs){
+                            File outputPdf= new File(processedSectionPath,doc.getName());
+                            File outputTxt = new File(txtSectionPath,doc.getName().split("\\.")[0]+".txt");
+                            processPdf(doc,outputPdf,
+                                    outputTxt,props,
+                                    sectionPathtoDb,sectionId);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public String getPdfDirectory() {
+        return pdfDirectory;
+    }
+
+    public String getProcessedPdfDirectory() {
+        return processedPdfDirectory;
+    }
+
+    public String getTxtDirectory() {
+        return txtDirectory;
+    }
+
+}

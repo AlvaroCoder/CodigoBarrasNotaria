@@ -31,26 +31,26 @@ public class DashboardControllerUsb {
 
     @FXML
     private void initialize(){
-        UsbDaoImpl usbDao = new UsbDaoImpl();
-        List<Usb> usbs = usbDao.findByIdClient(1);
-
-        // 🔑 Asociar las columnas con las propiedades del modelo
-        colId.setCellValueFactory(new PropertyValueFactory<>("id"));
-        colCliente.setCellValueFactory(new PropertyValueFactory<>("clientUsername"));
-        colFechaCreacion.setCellValueFactory(new PropertyValueFactory<>("creationDate"));
-        colFechaModificacion.setCellValueFactory(new PropertyValueFactory<>("lastModifiedDate"));
-
-        // Convertimos lista normal en observable
-        ObservableList<Usb> observableUsbList = FXCollections.observableArrayList(usbs);
-
-        tableUsb.setItems(observableUsbList);
-
-        // Debug
-        for (Usb usb : usbs) {
-            System.out.println("USB ID: " + usb.getId() +
-                    ", Cliente: " + usb.getClientUsername() +
-                    ", Creación: " + usb.getCreationDate() +
-                    ", Modificación: " + usb.getLastModifiedDate());
-        }
+//        UsbDaoImpl usbDao = new UsbDaoImpl();
+//        List<Usb> usbs = usbDao.findByIdClient(1);
+//
+//        // 🔑 Asociar las columnas con las propiedades del modelo
+//        colId.setCellValueFactory(new PropertyValueFactory<>("id"));
+//        colCliente.setCellValueFactory(new PropertyValueFactory<>("clientUsername"));
+//        colFechaCreacion.setCellValueFactory(new PropertyValueFactory<>("creationDate"));
+//        colFechaModificacion.setCellValueFactory(new PropertyValueFactory<>("lastModifiedDate"));
+//
+//        // Convertimos lista normal en observable
+//        ObservableList<Usb> observableUsbList = FXCollections.observableArrayList(usbs);
+//
+//        tableUsb.setItems(observableUsbList);
+//
+//        // Debug
+//        for (Usb usb : usbs) {
+//            System.out.println("USB ID: " + usb.getId() +
+//                    ", Cliente: " + usb.getClientUsername() +
+//                    ", Creación: " + usb.getCreationDate() +
+//                    ", Modificación: " + usb.getLastModifiedDate());
+//        }
     }
 }
