@@ -23,6 +23,9 @@ public class SignupController {
     private PasswordField txtPassword;
 
     @FXML
+    private PasswordField txtEmail;
+
+    @FXML
     private Button btnLogin;
 
 
@@ -34,8 +37,9 @@ public class SignupController {
             try{
                 String username = txtUsername.getText();
                 String password = txtPassword.getText();
+                String email=txtEmail.getText();
 
-                boolean adminRegister =  AuthModel.adminRegister(username, password);
+                boolean adminRegister =  AuthModel.adminRegister(username, password,email);
                 System.out.println("adminRegister = " + adminRegister);
                 if (adminRegister){
                     SessionModel.setUser(username, true);

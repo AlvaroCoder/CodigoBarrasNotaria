@@ -1,13 +1,14 @@
 package dao;
 
+import dto.UsbClientDto;
 import entities.Usb;
 
 import java.util.List;
 
 public interface UsbDao {
-    void insertOne(Usb usb);
-    Usb findOne(String id);
+    Integer insertOne(Usb usb);
+    Usb findOne(int id);
     List<Usb> findMany();
     void deleteOne(int id);
-    List<Usb> findByIdClient(int idClient);
+    List<UsbClientDto> findByIdClient(int idClient);
 }

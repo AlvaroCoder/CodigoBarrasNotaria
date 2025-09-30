@@ -4,24 +4,26 @@ public class Admin {
     private Integer id;
     private String username;
     private String password;
+    private String email;
 
-    public Admin(Integer id, String username, String password){
+    public Admin(Integer id, String username, String password, String email){
         this.id = id;
         this.username=username;
         this.password=password;
+        this.email = email;
     }
 
-    public Admin(Integer id, String username){
-        this(id,username,null);
+    public Admin(Integer id, String username,String email){
+        this(id,username,null,email);
     }
 
-    public Admin(String username, String password){
-        this(null,username,password);
+    public Admin(String username, String password, String email){
+        this(null,username,password,email);
     }
 
     @Override
     public String toString(){
-        return String.format("Admin(id=%d,username=%s)",getId(),getUsername());
+        return String.format("Admin(id=%d,username=%s,email=%s)",getId(),getUsername(),getEmail());
     }
 
     public Integer getId() {
@@ -46,5 +48,13 @@ public class Admin {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

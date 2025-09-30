@@ -1,6 +1,6 @@
 package controller;
 
-import entities.Pdf;
+import entities.PDF;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -40,23 +40,23 @@ public class DashboardControllerPdf {
 
     @FXML
     private void handleClickGeneratePdf(){
-        try{
-            String id = txtClaveId.getText();
-            String passwordPdf = txtContrasennadPdf.getText();
-
-            Pdf pdf = new Pdf();
-            byte[] pdfByte = pdf.fromTxtToPdf(id,passwordPdf);
-
-            Path tempFile = Files.createTempFile("pdfPreview_",".pdf");
-            Files.write(tempFile, pdfByte);
-            renderPreviewPdf(tempFile);
-
-            System.out.println("PDF generado en : "+tempFile.toAbsolutePath());
-            showAlert(Alert.AlertType.INFORMATION, "Exito", "Se genero el PDF con exitos");
-        } catch (Exception e){
-            System.out.println("Error = " + e);
-            showAlert(Alert.AlertType.ERROR, "Error al generar el PDF", e.getMessage());
-        }
+//        try{
+//            String id = txtClaveId.getText();
+//            String passwordPdf = txtContrasennadPdf.getText();
+//
+//            Pdf pdf = new Pdf();
+//            byte[] pdfByte = pdf.fromTxtToPdf(id,passwordPdf);
+//
+//            Path tempFile = Files.createTempFile("pdfPreview_",".pdf");
+//            Files.write(tempFile, pdfByte);
+//            renderPreviewPdf(tempFile);
+//
+//            System.out.println("PDF generado en : "+tempFile.toAbsolutePath());
+//            showAlert(Alert.AlertType.INFORMATION, "Exito", "Se genero el PDF con exitos");
+//        } catch (Exception e){
+//            System.out.println("Error = " + e);
+//            showAlert(Alert.AlertType.ERROR, "Error al generar el PDF", e.getMessage());
+//        }
     }
 
 

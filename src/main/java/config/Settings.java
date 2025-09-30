@@ -13,7 +13,7 @@ public class Settings {
     public static final String PDF_DIRECTORY = dotenv.get("PDF_DIRECTORY");
     public static final String PROCESSED_PDF_DIRECTORY = dotenv.get("PROCESSED_PDF_DIRECTORY");
     public static final String TXT_DIRECTORY = dotenv.get("TXT_DIRECTORY");
-
+    public static final String MAIN_DIRECTORY=dotenv.get("MAIN_DIRECTORY");
 
     public static String getJdbcUrl(){
         return "jdbc:mysql://" + DB_HOST + ":" + DB_PORT + "/" + DB_NAME;

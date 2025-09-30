@@ -51,9 +51,9 @@ public class AuthModel {
         return BCrypt.checkpw(password,admin.getPassword());
     }
 
-    public static boolean clientRegister(String dni, String password, String firstName, String lastName) throws Exception {
+    public static boolean clientRegister(String dni, String password, String firstName, String lastName, String email) throws Exception {
 
-        if (dni.isEmpty() || password.isEmpty() || firstName.isEmpty() || lastName.isEmpty()){
+        if (dni.isEmpty() || password.isEmpty() || firstName.isEmpty() || lastName.isEmpty() || email.isEmpty()){
             throw new Exception("Falta rellenar un campo");
         }
 
@@ -69,13 +69,13 @@ public class AuthModel {
 
         password = BCrypt.hashpw(password,BCrypt.gensalt());
 
+        Integer id=clientDaoImpl.insertOne(new Client(dni,password,firstName,lastName,email));
 
-        clientDaoImpl.insertOne(new Client(dni,password,firstName,lastName));
+        return id != null;
 
-        return true;
     }
 
-    public static boolean adminRegister(String username, String password) throws Exception{
+    public static boolean adminRegister(String username, String password,String email) throws Exception{
         if (username.isEmpty() || password.isEmpty()){
             throw new Exception("Falta completar un campo");
         }
@@ -92,7 +92,7 @@ public class AuthModel {
 
         password = BCrypt.hashpw(password,BCrypt.gensalt());
 
-        adminDaoImpl.insertOne(new Admin(username,password));
+        adminDaoImpl.insertOne(new Admin(username,password,email));
 
         return true;
     }

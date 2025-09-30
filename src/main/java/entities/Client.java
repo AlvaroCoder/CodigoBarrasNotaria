@@ -6,8 +6,9 @@ public class Client {
     private String password;
     private String firstName;
     private String lastName;
+    private String email;
 
-    public Client(Integer id, String dni,String password, String lastName, String firstName){
+    public Client(Integer id, String dni,String password, String lastName, String firstName,String email){
         if (dni.length()!=8){
             throw new IllegalArgumentException("El dni debe ser de ocho dígitos");
         }
@@ -16,17 +17,18 @@ public class Client {
         this.password=password;
         this.firstName=firstName;
         this.lastName=lastName;
+        this.email=email;
     }
 
-    public Client(Integer id, String dni,String firstName, String lastName){
-        this(id,dni,null,firstName,lastName);
+    public Client(Integer id, String dni,String firstName, String lastName, String email){
+        this(id,dni,null,firstName,lastName,email);
         if (dni.length()!=8){
             throw new IllegalArgumentException("El dni debe ser de ocho dígitos");
         }
     }
 
-    public Client(String dni, String password,String firstName,String lastName){
-        this(null,dni,password,firstName,lastName);
+    public Client(String dni, String password,String firstName,String lastName, String email){
+        this(null,dni,password,firstName,lastName,email);
         if (dni.length()!=8){
             throw new IllegalArgumentException("El dni debe ser de ocho dígitos");
         }
@@ -34,7 +36,8 @@ public class Client {
 
     @Override
     public String toString(){
-        return String.format("Client(id=%d,dni=%s)",getId(),getDni());
+        return String.format("Client(id=%d,dni=%s,firstName=%s,lastName=%s,email=%s)",
+                getId(),getDni(),getFirstName(),getLastName(),getEmail());
     }
 
     public Integer getId() {
@@ -75,5 +78,13 @@ public class Client {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
