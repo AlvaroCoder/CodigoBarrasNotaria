@@ -14,14 +14,21 @@ public class Main {
 //            System.out.println("Ocurrio un error");
 //        }
 
-        PDF pdf = new PDF(Settings.PDF_DIRECTORY,
-                Settings.PROCESSED_PDF_DIRECTORY,
-                Settings.TXT_DIRECTORY);
-        try{
-            pdf.trackFiles(1);
+//        PDF pdf = new PDF(Settings.PDF_DIRECTORY,
+//                Settings.PROCESSED_PDF_DIRECTORY,
+//                Settings.TXT_DIRECTORY);
+//        try{
+//            pdf.trackFiles(1);
+//        } catch (Exception e){
+//            e.printStackTrace();
+//            System.out.println("Ocurrio un error a");
+//        }
+
+        try {
+            PDF.renderProject(1,"D:/Will/Emprendimiento/Proyectos/results/secret_proyect/carpetPrueba");
         } catch (Exception e){
             e.printStackTrace();
-            System.out.println("Ocurrio un error a");
+            System.out.println("Ocurrio un error");
         }
 
 

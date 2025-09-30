@@ -30,6 +30,44 @@ public class PDF {
         this.txtDirectory=txtDirectory;
     }
 
+    public static void renderProject(int usbId,String destinyPath) throws Exception{
+        UsbDaoImpl usbDaoImpl = new UsbDaoImpl();
+        Usb project=usbDaoImpl.findOne(usbId);
+        File projectPath = new File(Settings.MAIN_DIRECTORY,project.getPath());
+        File destinyProjectPath = new File(destinyPath,project.getPath());
+        if (!destinyProjectPath.mkdir()){
+            throw new Exception("Ocurrio un error al crear la carpeta del proyeto");
+        }
+        for (String record : projectPath.list()){
+            File recordPath = new File(projectPath,record);
+            File destinyRecordPath = new File(destinyProjectPath,record);
+            if (!destinyRecordPath.mkdir()){
+                throw new Exception("Ocurrio un error al crear la carpeta de un expediente");
+            }
+            for (String section: recordPath.list()){
+                File sectionPath = new File(recordPath,section);
+                File destinySectionPath = new File(destinyRecordPath,section);
+                if (!destinySectionPath.mkdir()){
+                    throw new Exception("Ocurrio un error al crear la carpeta de una seccion");
+                }
+                for (String page: sectionPath.list()){
+                    File pagePath = new File(sectionPath,page);
+                    File destinyPagePath = new File(destinySectionPath,page.split("\\.")[0]+".pdf");
+                    try{
+                        String txtBase64 = new String(Files.readAllBytes(Paths.get(pagePath.getAbsolutePath())));
+                        byte[] pdfBytes = Base64.getDecoder().decode(txtBase64);
+                        Files.write(Paths.get(destinyPagePath.getAbsolutePath()),pdfBytes);
+                    } catch (Exception e){
+                        e.printStackTrace();
+                        System.out.println("Ocurrio un error al convertir el documento txt a pdf");
+                    }
+
+                }
+            }
+        }
+
+    }
+
     public static byte[] fromTxtToPdf(String serialNumber, String password) throws Exception {
         PageDaoImpl pageDaoImpl = new PageDaoImpl();
         Page page =pageDaoImpl.findOne(serialNumber);

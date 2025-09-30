@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class RecordDaoImpl implements RecordDao {
+
     @Override
     public Integer insertOne(Record record){
         String sql = "INSERT record(name,description,usb_id,creation_date,last_modified_date,path) VALUES(?,?,?,?,?,?)";
