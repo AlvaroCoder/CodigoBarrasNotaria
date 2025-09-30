@@ -9,7 +9,6 @@ public interface PageDao {
     String insertOne(Page page);
     //GET
     Page findOne(String serialNumber);
-    List<Page> findMany(int sectionId);
-    //DELETE
+    List<Page> findMany(int sectionId);//DELETE
     void deleteOne(int id) throws Exception;
 }

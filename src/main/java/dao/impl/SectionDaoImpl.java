@@ -4,10 +4,35 @@ import dao.SectionDao;
 import entities.Section;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class SectionDaoImpl implements SectionDao {
+    @Override
+    public List<Section> findMany(int recordId){
+        ArrayList<Section> sections = new ArrayList<>();
+        String sql ="SELECT id, name, creation_date, last_modified_date, path WHERE record_id=?";
+        try(Connection conn = DbConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+        ){
+            stmt.setInt(1,recordId);
+            ResultSet rs =  stmt.executeQuery();
+            while (rs.next()){
+                sections.add(new Section(rs.getObject("id",Integer.class),
+                        rs.getObject("name",String.class),
+                        recordId,
+                        rs.getTimestamp("creation_date").toLocalDateTime(),
+                        rs.getTimestamp("last_modified_date").toLocalDateTime(),
+                        rs.getObject("path",String.class)));
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+        return sections;
+    }
+
     @Override
     public Integer insertOne(Section section){
         Integer id = null;
