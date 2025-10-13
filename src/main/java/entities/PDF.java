@@ -1,6 +1,8 @@
 package entities;
 
 import com.itextpdf.barcodes.Barcode128;
+import com.itextpdf.kernel.colors.ColorConstants;
+import com.itextpdf.kernel.geom.Rectangle;
 import com.itextpdf.kernel.pdf.*;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.layout.Document;
@@ -19,6 +21,13 @@ import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.UUID;
 
+/*
+* A3 == 2-A4
+* A2 == 4-A4
+* A1 == 8-A4
+* A0 == 16-A4
+* */
+
 public class PDF {
     private final String pdfDirectory;
     private final String processedPdfDirectory;
@@ -29,7 +38,7 @@ public class PDF {
         this.processedPdfDirectory=processedPdfDirectory;
         this.txtDirectory=txtDirectory;
     }
-
+    //para mover el proyeto al directorio del usb
     public static void renderProject(int usbId,String destinyPath) throws Exception{
         UsbDaoImpl usbDaoImpl = new UsbDaoImpl();
         Usb project=usbDaoImpl.findOne(usbId);
@@ -44,6 +53,7 @@ public class PDF {
             if (!destinyRecordPath.mkdir()){
                 throw new Exception("Ocurrio un error al crear la carpeta de un expediente");
             }
+
             for (String section: recordPath.list()){
                 File sectionPath = new File(recordPath,section);
                 File destinySectionPath = new File(destinyRecordPath,section);
@@ -122,55 +132,64 @@ public class PDF {
         pageDaoImpl.insertOne(new Page(serialNumber,sectionId,path));
     }
 
-    public void processPdf(File doc,File outputPdf,
-                           File outputTxt,WriterProperties props,
+    //el outputPdf y el outputTxt deben generarse dentro del metodo, no se deben pedir
+    public void processPdf(File doc, File processedSectionPath, File txtSectionPath,
+                           WriterProperties props,
                            File pathToDb, int sectionId) throws Exception{
         try(PdfReader reader = new PdfReader(doc);
-            PdfWriter writer = new PdfWriter(outputPdf.getAbsolutePath(),props);
-            PdfDocument pdf = new PdfDocument(reader,writer);
-            Document document = new Document(pdf);
+            PdfDocument pdf = new PdfDocument(reader);
         ){
-            //AGREGAR EL CODIGO DE BARRAS
-            Barcode128 barcode = new Barcode128(pdf);
+            int pageTotal = pdf.getNumberOfPages();
+            for (int i = 1; i<=pageTotal;i++){
 
-            String serialNumber=UUID.randomUUID().toString().substring(0,16);
-            barcode.setCode(serialNumber);//id
+                File outputFile = new File(processedSectionPath,doc.getName().split("\\.")[0]+"_page_"+i+".pdf");
+                File outputTxt = new File(txtSectionPath,doc.getName().split("\\.")[0]+"_page_"+i+".txt");
+                try(PdfWriter writer = new PdfWriter(outputFile.getAbsolutePath(),props);
+                    PdfDocument newPdf = new PdfDocument(writer);
+                    Document document = new Document(newPdf);
+                ){
+                    pdf.copyPagesTo(i,i,newPdf);
 
-            barcode.setFont(null);
-            barcode.setBarHeight(20);
-            barcode.setX(0.5f);
 
+                    Barcode128 barcode = new Barcode128(newPdf);
 
-            Image barcodeImage = new Image(barcode.createFormXObject(pdf));
+                    String serialNumber=UUID.randomUUID().toString().substring(0,16);
+                    barcode.setCode(serialNumber);//id
 
-            int page = 1;
-            float x = 175;
-            float y = 10;
+                    barcode.setFont(null);
+                    barcode.setBarHeight(20);
+                    barcode.setX(0.5f);
 
-            PdfCanvas canvas = new PdfCanvas(pdf.getPage(page));
-            barcodeImage.setFixedPosition(page,x,y);
-            document.add(barcodeImage);
+                    Image barcodeImage = new Image(barcode.createFormXObject(ColorConstants.BLACK,ColorConstants.BLACK,newPdf));
 
-            //CONVERTIR A BYTES EL CONTENIDO DEL DOCUMENTO
-            document.close();
+                    Rectangle pageSize = newPdf.getPage(1).getPageSize();
 
-            FileInputStream fis = new FileInputStream(outputPdf);
-            byte[] pdfBytes = new byte[(int) outputPdf.length()];
-            fis.read(pdfBytes);
-            fis.close();
+                    float x = (pageSize.getWidth()/2) -(barcodeImage.getImageWidth()/2) ;
+                    float y = 10;
 
-            String pdfBase64 = Base64.getEncoder().encodeToString(pdfBytes);
-            String txtName=doc.getName().split("\\.")[0]+".txt";
+                    barcodeImage.setFixedPosition(1,x,y);
+                    document.add(barcodeImage);
+                    document.close();
 
-            String txtPathToDb = new File(pathToDb,txtName).getPath().replace("\\","/");
+                    FileInputStream fis = new FileInputStream(outputFile);
+                    byte[] pdfBytes = new byte[(int) outputFile.length()];
+                    fis.read(pdfBytes);
+                    fis.close();
 
-            try(FileWriter fw = new FileWriter(outputTxt)){
-                fw.write(pdfBase64);
-            } catch (Exception e){
-                e.printStackTrace();
+                    String pdfBase64 = Base64.getEncoder().encodeToString(pdfBytes);
+                    String txtName=doc.getName().split("\\.")[0]+".txt";
+
+                    String txtPathToDb = new File(pathToDb,txtName).getPath().replace("\\","/");
+
+                    try(FileWriter fw = new FileWriter(outputTxt)){
+                        fw.write(pdfBase64);
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    savePageInfo(sectionId,txtPathToDb);
+                }
+
             }
-
-            savePageInfo(sectionId,txtPathToDb);
 
         } catch (Exception e){
             e.printStackTrace();
@@ -220,8 +239,10 @@ public class PDF {
 
                 Integer recordId = saveRecordInfo(recordName,null,usbId,recordPathToDb.getPath().replace("\\","/"));
 
-                for (String sectionName:recordPath.list()){
-                    File sectionPath = new File(recordPath,sectionName);
+                for (String sectionFile:recordPath.list()){
+                    String sectionName = sectionFile.split("\\.")[0];
+
+                    File sectionPath = new File(recordPath,sectionFile);
                     File sectionPathtoDb=new File(recordPathToDb,sectionName);
 
                     File processedSectionPath = new File(processedRecordPath,sectionName);
@@ -233,16 +254,8 @@ public class PDF {
 
                     Integer sectionId=saveSectionInfo(sectionName,recordId,sectionPathtoDb.getPath().replace("\\","/"));
 
-                    File[] docs = sectionPath.listFiles((dir,name)->name.toLowerCase().endsWith(".pdf"));
-                    if (docs !=null){
-                        for (File doc: docs){
-                            File outputPdf= new File(processedSectionPath,doc.getName());
-                            File outputTxt = new File(txtSectionPath,doc.getName().split("\\.")[0]+".txt");
-                            processPdf(doc,outputPdf,
-                                    outputTxt,props,
-                                    sectionPathtoDb,sectionId);
-                        }
-                    }
+                    processPdf(sectionPath,processedSectionPath,txtSectionPath,props,sectionPathtoDb,sectionId);
+
                 }
             }
         }
