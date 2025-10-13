@@ -23,7 +23,7 @@ public class SignupController {
     private PasswordField txtPassword;
 
     @FXML
-    private PasswordField txtEmail;
+    private TextField txtEmail;
 
     @FXML
     private Button btnLogin;
