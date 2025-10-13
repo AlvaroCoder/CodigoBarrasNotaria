@@ -1,11 +1,16 @@
 package controller;
 
+import config.ToastAlerts;
 import dao.impl.UsbDaoImpl;
 import entities.PDF;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
+
+import java.io.File;
 
 public class DashboardControllerHome {
     @FXML
@@ -21,44 +26,56 @@ public class DashboardControllerHome {
     private Button btnProcess;
 
     @FXML
+    private Button btnBuscarRutaInput;
+
+    @FXML
+    private Button btnBuscarRutaOutputPdf;
+
+    @FXML
+    private Button btnBuscarRutaOutputTxt;
+
+    @FXML
     private void initialize(){
         btnProcess.setOnAction(e->processDocument());
+        btnBuscarRutaInput.setOnAction(e->seleccionarCarpeta(btnBuscarRutaInput, txtInputDir));
+        btnBuscarRutaOutputPdf.setOnAction(e->seleccionarCarpeta(btnBuscarRutaOutputPdf, txtOutputDirPdf));
+        btnBuscarRutaOutputTxt.setOnAction(e->seleccionarCarpeta(btnBuscarRutaOutputTxt, txtOutputDirTxt));
     }
+
+    private void seleccionarCarpeta(Button btnBuscarRuta, TextField outputDirectoryUsb){
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Seleccionar carpeta de destino");
+
+        Stage stage = (Stage) btnBuscarRuta.getScene().getWindow();
+        File selectedDirectory = directoryChooser.showDialog(stage);
+
+        if (selectedDirectory != null) {
+            outputDirectoryUsb.setText(selectedDirectory.getAbsolutePath());
+        }
+    }
+
 
     private void processDocument(){
         String inputDir = txtInputDir.getText();
         String outputDirPdf = txtOutputDirPdf.getText();
         String outputDirTxt = txtOutputDirTxt.getText();
         if (inputDir.isEmpty() || outputDirPdf.isEmpty() || outputDirTxt.isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Campos vacios", "Ingresa todas las rutas");
+            ToastAlerts.warning("Campos Vacios", "Ingrese todas las rutas");
             return;
         }
-//        try {
-//            Pdf pdf = new Pdf(inputDir, outputDirPdf, outputDirTxt);
-//
-//            String usbId = pdf.saveInfoUsb(1);
-//            System.out.println("usbId = " + usbId);
-//            String recordId = pdf.saveRecord(
-//                    "Registro 1",
-//                    "Información de un registro",
-//                    1, usbId);
-//            System.out.println("recordId = " + recordId);
-//            UsbDaoImpl usbDaoImpl = new UsbDaoImpl();
-//            String pdfPassword = usbDaoImpl.findOne(usbId).getPdfPassword();
-//
-//            pdf.processPdfs(recordId, pdfPassword);
-//
-//            showAlert(Alert.AlertType.INFORMATION, "Éxito", "Se procesó la información correctamente.");
-//        } catch (Exception e) {
-//            showAlert(Alert.AlertType.ERROR, "Error al procesar", "Ocurrió un error: " + e.getMessage());
-//        }
+
+        int idCliente =1;
+        PDF pdf = new PDF(
+                inputDir,
+                outputDirPdf,
+                outputDirTxt);
+
+        try{
+            pdf.trackFiles(idCliente);
+        } catch (Exception e){
+            ToastAlerts.error("Error", "Ocurrio un error al procesar los PDF");
+        }
+
     }
 
-    private void showAlert(Alert.AlertType alertType, String title, String message) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
 }

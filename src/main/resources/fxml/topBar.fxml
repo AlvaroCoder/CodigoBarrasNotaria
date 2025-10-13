@@ -46,10 +46,12 @@
                 text="USBs"
                 onAction="#handleUsbClick"
                 styleClass="nav-link"/>
+
         <Button
-                text="Registros"
-                onAction="#handleRegistroClick"
-                styleClass="nav-link"/>
+            text="Copiar Docs"
+            onAction="#handleCopiarDocumentos"
+            styleClass="nav-link"
+        />
     </HBox>
     <Pane HBox.hgrow="ALWAYS" />
     <HBox alignment="CENTER_RIGHT" spacing="10">

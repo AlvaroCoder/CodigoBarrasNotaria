@@ -2,40 +2,136 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
+
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="controller.DashboardControllerHome"
-            prefHeight="400.0" prefWidth="600.0">
+            prefHeight="700.0" prefWidth="900.0"
+            style="-fx-background-color: #f3f4f6;">
 
     <center>
-        <VBox prefWidth="800" prefHeight="500" spacing="20" alignment="CENTER">
+        <VBox prefWidth="850" spacing="25" alignment="CENTER">
             <padding>
-                <Insets top="30" right="20" bottom="20" left="20"/>
+                <Insets top="30" right="20" bottom="30" left="20"/>
             </padding>
 
-            <Label text="Procesamiento de Documentos"
-                   style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+            <!-- Título -->
+            <Label text="📂 Procesamiento de Documentos"
+                   style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #111827;"/>
 
-            <VBox spacing="5" alignment="CENTER_LEFT" maxWidth="400">
-                <Label text="Directorio de documentos:" style="-fx-font-size: 14px;"/>
-                <TextField fx:id="txtInputDir" promptText="Ingrese la ruta del directorio de documentos"
-                           prefWidth="400"/>
+            <VBox spacing="20" alignment="CENTER" maxWidth="800">
+
+                <VBox spacing="5" alignment="CENTER_LEFT">
+                    <Label text="Directorio de documentos:" style="-fx-font-size: 14px;"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <TextField fx:id="txtInputDir" promptText="Ingrese la ruta del directorio de documentos"
+                                   prefWidth="600"
+                                   style="-fx-background-color: white;
+                                          -fx-border-color: #d1d5db;
+                                          -fx-border-width: 1.5;
+                                          -fx-border-radius: 8;
+                                          -fx-background-radius: 8;
+                                          -fx-padding: 10 15;
+                                          -fx-font-size: 14px;
+                                          -fx-text-fill: #111827;"/>
+                        <Button fx:id="btnBuscarRutaInput"
+                                text="📁 Seleccionar"
+                                prefWidth="180"
+                                style="-fx-font-size: 14px;
+                                       -fx-background-color: #0C1019;
+                                       -fx-text-fill: white;
+                                       -fx-background-radius: 8;"/>
+                    </HBox>
+                </VBox>
+
+                <VBox spacing="5" alignment="CENTER_LEFT">
+                    <Label text="Directorio de salida PDF:" style="-fx-font-size: 14px;"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <TextField fx:id="txtOutputDirPdf" promptText="Ingrese la ruta de salida (.PDF)"
+                                   prefWidth="600"
+                                   style="-fx-background-color: white;
+                                          -fx-border-color: #d1d5db;
+                                          -fx-border-width: 1.5;
+                                          -fx-border-radius: 8;
+                                          -fx-background-radius: 8;
+                                          -fx-padding: 10 15;
+                                          -fx-font-size: 14px;
+                                          -fx-text-fill: #111827;"/>
+                        <Button fx:id="btnBuscarRutaOutputPdf"
+                                text="📁 Seleccionar"
+                                prefWidth="180"
+                                style="-fx-font-size: 14px;
+                                       -fx-background-color: #0C1019;
+                                       -fx-text-fill: white;
+                                       -fx-background-radius: 8;"/>
+                    </HBox>
+                </VBox>
+
+                <VBox spacing="5" alignment="CENTER_LEFT">
+                    <Label text="Directorio de salida TXT:" style="-fx-font-size: 14px;"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <TextField fx:id="txtOutputDirTxt" promptText="Ingrese la ruta donde se guardarán los archivos (.TXT)"
+                                   prefWidth="600"
+                                   style="-fx-background-color: white;
+                                          -fx-border-color: #d1d5db;
+                                          -fx-border-width: 1.5;
+                                          -fx-border-radius: 8;
+                                          -fx-background-radius: 8;
+                                          -fx-padding: 10 15;
+                                          -fx-font-size: 14px;
+                                          -fx-text-fill: #111827;"/>
+                        <Button fx:id="btnBuscarRutaOutputTxt"
+                                text="📁 Seleccionar"
+                                prefWidth="180"
+                                style="-fx-font-size: 14px;
+                                       -fx-background-color: #0C1019;
+                                       -fx-text-fill: white;
+                                       -fx-background-radius: 8;"/>
+                    </HBox>
+                </VBox>
             </VBox>
 
-            <VBox spacing="5" alignment="CENTER_LEFT" maxWidth="400">
-                <Label text="Directorio de salida PDF:" style="-fx-font-size: 14px;"/>
-                <TextField fx:id="txtOutputDirPdf" promptText="Ingrese la ruta donde se guardarán los archivos (.PDF)"
-                           prefWidth="400"/>
+            <!-- Tabla de Clientes -->
+            <VBox spacing="10" alignment="CENTER" maxWidth="800">
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Selecciona un cliente"
+                           style="-fx-font-size: 15px; -fx-font-weight: bold;"/>
+                    <Button text="➕ Registrar Cliente"
+                            fx:id="btnRegistrarCliente"
+                            style="-fx-font-size: 13px;
+                                   -fx-background-color: #0C1019;
+                                   -fx-text-fill: white;
+                                   -fx-padding: 6 15;
+                                   -fx-background-radius: 8;"/>
+                </HBox>
+
+                <TableView fx:id="tableClientes"
+                           prefHeight="400"
+                           maxWidth="800"
+                           style="-fx-background-color: white;
+                                  -fx-border-color: #d1d5db;
+                                  -fx-border-radius: 8;
+                                  -fx-background-radius: 8;
+                                  -fx-padding: 5;">
+                    <columns>
+                        <TableColumn fx:id="colId" text="ID" prefWidth="100"/>
+                        <TableColumn fx:id="colNombre" text="Nombre" prefWidth="200"/>
+                        <TableColumn fx:id="colApellido" text="Apellido" prefWidth="200"/>
+                        <TableColumn fx:id="colDni" text="DNI" prefWidth="150"/>
+                        <TableColumn fx:id="colAction" text="✏️" prefWidth="150"/>
+                    </columns>
+                </TableView>
             </VBox>
 
-            <VBox spacing="5" alignment="CENTER_LEFT" maxWidth="400">
-                <Label text="Directorio de salida TXT:" style="-fx-font-size: 14px;"/>
-                <TextField fx:id="txtOutputDirTxt" promptText="Ingrese la ruta donde se guardarán los archivos (.TXT)"
-                           prefWidth="400"/>
-            </VBox>
             <Button fx:id="btnProcess"
                     text="⚡ Procesar documentos"
-                    style="-fx-font-size: 16px; -fx-background-color: #0C1019; -fx-text-fill: white; -fx-padding: 12 24;"/>
+                    style="-fx-font-size: 16px;
+                           -fx-font-weight: bold;
+                           -fx-background-color: #0C1019;
+                           -fx-text-fill: white;
+                           -fx-padding: 12 28;
+                           -fx-background-radius: 10;
+                           -fx-cursor: hand;"/>
         </VBox>
     </center>
 </BorderPane>
