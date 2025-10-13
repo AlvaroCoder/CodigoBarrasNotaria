@@ -54,6 +54,11 @@ public class TopbarController {
         dashboardController.loadView("/fxml/dashboard/pagesRegister.fxml");
     }
 
+    @FXML
+    private void handleCopiarDocumentos(){
+        dashboardController.loadView("/fxml/dashboard/copyDocumentsView.fxml");
+    }
+
     public void loadAdminInfo(){
         String username = SessionModel.getUsername();
         txtDashboard.setText(username);

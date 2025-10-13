@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <?import javafx.scene.image.ImageView?>
 
 <BorderPane xmlns="http://javafx.com/javafx"
@@ -13,6 +9,7 @@
             fx:controller="controller.SignupController"
             prefHeight="400.0" prefWidth="600.0"
             style="-fx-background-color: #f5f6fa;">
+
     <center>
         <HBox prefHeight="500" prefWidth="800">
             <VBox prefWidth="350" alignment="CENTER">
@@ -21,20 +18,31 @@
                            fitWidth="200" fitHeight="200"
                            preserveRatio="true"/>
             </VBox>
-            <VBox prefWidth="450" spacing="15" alignment="CENTER">
-                <Label text="Registrate" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
 
-                <TextField fx:id="txtUsername" promptText="Usuario" maxWidth="250"/>
-                <PasswordField fx:id="txtPassword" promptText="Contraseña" maxWidth="250"/>
+            <!-- Panel derecho con formulario -->
+            <VBox prefWidth="450" spacing="15" alignment="CENTER">
+                <Label text="Regístrate"
+                       style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+                <TextField fx:id="txtUsername"
+                           promptText="Usuario"
+                           maxWidth="250"/>
+
+                <TextField fx:id="txtEmail"
+                           promptText="Email"
+                           maxWidth="250"/>
+
+                <PasswordField fx:id="txtPassword"
+                               promptText="Contraseña"
+                               maxWidth="250"/>
 
                 <Button fx:id="btnLogin"
                         text="Ingresar"
-                        style="-fx-background-color: #001f3f; -fx-text-fill: white;"
+                        style="-fx-background-color: #001f3f; -fx-text-fill: white; -fx-background-radius: 5;"
                         maxWidth="250"/>
 
-                <Hyperlink text="Inicia sesion"/>
+                <Hyperlink text="¿Ya tienes cuenta? Inicia sesión"/>
             </VBox>
         </HBox>
-
     </center>
 </BorderPane>

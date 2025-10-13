@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.DashboardControllerCopyDocuments"
+            prefHeight="400.0" prefWidth="600.0">
+    <center>
+        <VBox prefWidth="800" prefHeight="500" spacing="20" alignment="TOP_CENTER">
+            <padding>
+                    <Insets top="10" right="10" bottom="10" left="10" />
+            </padding>
+            <Label
+                text="Copia tus documentos"
+                style="-fx-font-size: 18px; -fx-font-weight : bold;"
+            />
+            <VBox spacing="5" alignment="CENTER_LEFT" maxWidth="400">
+                <Label
+                        text="Ingresa el ID del USB"
+                        style="-fx"
+                />
+                <TextField
+                    fx:id="txtInputIdUsb"
+                    promptText="Ingresa el ID del USB"
+                    prefWidth="600"
+                    style="-fx-background-color: white;
+                           -fx-border-color: #d1d5db;
+                            -fx-border-width: 1.5;
+                            -fx-border-radius: 8;
+                            -fx-background-radius: 8;
+                            -fx-padding: 10 15;
+                            -fx-font-size: 14px;
+                            -fx-text-fill: #111827;"
+                />
+            </VBox>
+            <VBox
+                spacing="5"
+                alignment="CENTER_LEFT"
+                maxWidth="400"
+            >
+                <Label
+                    text="Ingresa la ruta de destino"
+                    style="-fx-font-size: 14px;"
+                />
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <TextField fx:id="outputDirectoryUsb"
+                               promptText="Ruta del USB"
+                               prefWidth="400"
+                               style="-fx-background-color: white;
+                                          -fx-border-color: #d1d5db;
+                                          -fx-border-width: 1.5;
+                                          -fx-border-radius: 8;
+                                          -fx-background-radius: 8;
+                                          -fx-padding: 10 15;
+                                          -fx-font-size: 14px;
+                                          -fx-text-fill: #111827;"/>
+                    <Button fx:id="btnBuscarRuta"
+                            text="📁Seleccionar"
+                            style="-fx-font-size: 14px;
+                                       -fx-background-color: #0C1019;
+                                       -fx-text-fill: white;
+                                       -fx-background-radius: 8;"/>
+                </HBox>
+            </VBox>
+            <Button fx:id="btnCopiarDocs"
+                text="Copiar Documentos"
+                    style="-fx-font-size: 16px; -fx-background-color: #0C1019; -fx-text-fill: white; -fx-padding: 12 24;"
+            />
+        </VBox>
+    </center>
+</BorderPane>

@@ -1,5 +1,6 @@
 package controller;
 
+import config.ToastAlerts;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -34,6 +35,10 @@ public class LoginController {
                 String username = txtUsername.getText();
                 String password = txtPassword.getText();
 
+                if (username.isEmpty() || password.isEmpty()){
+                    ToastAlerts.warning("Error","Complete sus credenciales");
+                    return;
+                }
                 boolean adminLogin = AuthModel.adminLogin(username, password);
                 System.out.println("adminLogin = " + adminLogin);
                 if (adminLogin){
@@ -43,12 +48,19 @@ public class LoginController {
                     );
                     Parent parent = loader.load();
 
+                    ToastAlerts.success("Exito", "Inicio de sesion exitoso!");
                     Stage stage = (javafx.stage.Stage) btnLogin.getScene().getWindow();
                     stage.setScene(new Scene(parent));
                     stage.show();
                 }
+                else{
+                    ToastAlerts.error("Error", "Credenciales incorrectas");
+                    txtPassword.setText("");
+                    txtUsername.setText("");
+                }
             }catch (Exception e){
                 System.out.println("e = " + e);
+                ToastAlerts.error("Error de Inicio", "Ocurrio un error en el Inicio de Sesion");
             }
         }));
     }
