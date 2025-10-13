@@ -10,12 +10,12 @@
             style="-fx-background-color: #f3f4f6;">
 
     <center>
-        <VBox prefWidth="850" spacing="25" alignment="CENTER">
+        <VBox
+                prefWidth="850" spacing="25" alignment="CENTER">
             <padding>
                 <Insets top="30" right="20" bottom="30" left="20"/>
             </padding>
 
-            <!-- Título -->
             <Label text="📂 Procesamiento de Documentos"
                    style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #111827;"/>
 
@@ -91,7 +91,6 @@
                 </VBox>
             </VBox>
 
-            <!-- Tabla de Clientes -->
             <VBox spacing="10" alignment="CENTER" maxWidth="800">
                 <HBox spacing="10" alignment="CENTER_LEFT">
                     <Label text="Selecciona un cliente"
@@ -106,7 +105,8 @@
                 </HBox>
 
                 <TableView fx:id="tableClientes"
-                           prefHeight="400"
+
+                           minHeight="200"
                            maxWidth="800"
                            style="-fx-background-color: white;
                                   -fx-border-color: #d1d5db;
@@ -118,7 +118,7 @@
                         <TableColumn fx:id="colNombre" text="Nombre" prefWidth="200"/>
                         <TableColumn fx:id="colApellido" text="Apellido" prefWidth="200"/>
                         <TableColumn fx:id="colDni" text="DNI" prefWidth="150"/>
-                        <TableColumn fx:id="colAction" text="✏️" prefWidth="150"/>
+                        <TableColumn fx:id="colSeleccionar"  text="Acción" prefWidth="150"/>
                     </columns>
                 </TableView>
             </VBox>
@@ -133,5 +133,6 @@
                            -fx-background-radius: 10;
                            -fx-cursor: hand;"/>
         </VBox>
+
     </center>
 </BorderPane>

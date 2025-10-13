@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.components.FormCreateClientController"
+            prefHeight="500.0" prefWidth="600.0"
+            style="-fx-background-color: #f3f4f6;">
+
+    <center>
+        <VBox alignment="CENTER" spacing="20" maxWidth="450">
+            <padding>
+                <Insets top="40" right="20" bottom="40" left="20"/>
+            </padding>
+
+            <Label text="🧾 Registrar Nuevo Cliente"
+                   style="-fx-font-size: 22px;
+                          -fx-font-weight: bold;
+                          -fx-text-fill: #111827;"/>
+
+            <VBox spacing="5" alignment="CENTER_LEFT" prefWidth="400">
+                <Label text="DNI:" style="-fx-font-size: 14px;"/>
+                <TextField fx:id="txtDni" promptText="Ingrese el DNI del cliente"
+                           prefWidth="400"
+                           style="-fx-background-color: white;
+                                  -fx-border-color: #d1d5db;
+                                  -fx-border-width: 1.5;
+                                  -fx-border-radius: 8;
+                                  -fx-background-radius: 8;
+                                  -fx-padding: 10 15;
+                                  -fx-font-size: 14px;
+                                  -fx-text-fill: #111827;"/>
+            </VBox>
+
+            <VBox spacing="5" alignment="CENTER_LEFT" prefWidth="400">
+                <Label text="Nombre:" style="-fx-font-size: 14px;"/>
+                <TextField fx:id="txtFirstName" promptText="Ingrese el nombre"
+                           prefWidth="400"
+                           style="-fx-background-color: white;
+                                  -fx-border-color: #d1d5db;
+                                  -fx-border-width: 1.5;
+                                  -fx-border-radius: 8;
+                                  -fx-background-radius: 8;
+                                  -fx-padding: 10 15;
+                                  -fx-font-size: 14px;
+                                  -fx-text-fill: #111827;"/>
+            </VBox>
+
+            <!-- Campo Apellido -->
+            <VBox spacing="5" alignment="CENTER_LEFT" prefWidth="400">
+                <Label text="Apellido:" style="-fx-font-size: 14px;"/>
+                <TextField fx:id="txtLastName" promptText="Ingrese el apellido"
+                           prefWidth="400"
+                           style="-fx-background-color: white;
+                                  -fx-border-color: #d1d5db;
+                                  -fx-border-width: 1.5;
+                                  -fx-border-radius: 8;
+                                  -fx-background-radius: 8;
+                                  -fx-padding: 10 15;
+                                  -fx-font-size: 14px;
+                                  -fx-text-fill: #111827;"/>
+            </VBox>
+
+            <!-- Campo Email -->
+            <VBox spacing="5" alignment="CENTER_LEFT" prefWidth="400">
+                <Label text="Correo electrónico:" style="-fx-font-size: 14px;"/>
+                <TextField fx:id="txtEmail" promptText="Ingrese el correo del cliente"
+                           prefWidth="400"
+                           style="-fx-background-color: white;
+                                  -fx-border-color: #d1d5db;
+                                  -fx-border-width: 1.5;
+                                  -fx-border-radius: 8;
+                                  -fx-background-radius: 8;
+                                  -fx-padding: 10 15;
+                                  -fx-font-size: 14px;
+                                  -fx-text-fill: #111827;"/>
+            </VBox>
+
+            <VBox spacing="5" alignment="CENTER_LEFT" prefWidth="400">
+                <Label text="Contraseña:" style="-fx-font-size: 14px;"/>
+                <PasswordField fx:id="txtPassword" promptText="Ingrese una contraseña segura"
+                               prefWidth="400"
+                               style="-fx-background-color: white;
+                                      -fx-border-color: #d1d5db;
+                                      -fx-border-width: 1.5;
+                                      -fx-border-radius: 8;
+                                      -fx-background-radius: 8;
+                                      -fx-padding: 10 15;
+                                      -fx-font-size: 14px;
+                                      -fx-text-fill: #111827;"/>
+            </VBox>
+
+            <!-- Botón de registro -->
+            <HBox spacing="10">
+                <Button fx:id="btnRegistrar"
+                        text="Registrar Cliente"
+                        prefWidth="200"
+                        style="-fx-font-size: 16px;
+                           -fx-font-weight: bold;
+                           -fx-background-color: #0C1019;
+                           -fx-text-fill: white;
+                           -fx-padding: 12 24;
+                           -fx-background-radius: 10;
+                           -fx-cursor: hand;"/>
+                <Button fx:id="btnCancelar"
+                        text="Cancelar"
+                        prefWidth="190"
+                        style="-fx-font-size: 16px;
+                           -fx-font-weight: bold;
+                           -fx-background-color: #333333;
+                           -fx-text-fill: white;
+                           -fx-padding: 12 24;
+                           -fx-background-radius: 10;
+                           -fx-cursor: hand;"
+                />
+            </HBox>
+
+        </VBox>
+    </center>
+</BorderPane>

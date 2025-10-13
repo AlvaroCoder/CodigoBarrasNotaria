@@ -22,7 +22,7 @@ public class DashboardController {
     @FXML
     private void initialize(){
         loadTopBar();
-        loadView("/fxml/dashboard/homeView.fxml");
+        loadView("/fxml/dashboard/containerHome.fxml");
     }
 
     private void loadTopBar() {

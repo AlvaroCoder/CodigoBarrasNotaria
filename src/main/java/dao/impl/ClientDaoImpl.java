@@ -42,8 +42,8 @@ public class ClientDaoImpl implements ClientDao {
             while (rs.next()){
                 clients.add(new Client(rs.getObject("id",Integer.class),
                         rs.getObject("dni",String.class),
-                        rs.getObject("firstName",String.class),
-                        rs.getObject("lastName",String.class),
+                        rs.getObject("first_name",String.class),
+                        rs.getObject("last_name",String.class),
                         rs.getObject("email",String.class)));
             }
         }catch (Exception e){
