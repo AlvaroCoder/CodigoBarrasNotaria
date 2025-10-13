@@ -1,5 +1,6 @@
 package controller;
 
+import config.ToastAlerts;
 import entities.PDF;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
@@ -40,23 +41,22 @@ public class DashboardControllerPdf {
 
     @FXML
     private void handleClickGeneratePdf(){
-//        try{
-//            String id = txtClaveId.getText();
-//            String passwordPdf = txtContrasennadPdf.getText();
-//
-//            Pdf pdf = new Pdf();
-//            byte[] pdfByte = pdf.fromTxtToPdf(id,passwordPdf);
-//
-//            Path tempFile = Files.createTempFile("pdfPreview_",".pdf");
-//            Files.write(tempFile, pdfByte);
-//            renderPreviewPdf(tempFile);
-//
-//            System.out.println("PDF generado en : "+tempFile.toAbsolutePath());
-//            showAlert(Alert.AlertType.INFORMATION, "Exito", "Se genero el PDF con exitos");
-//        } catch (Exception e){
-//            System.out.println("Error = " + e);
-//            showAlert(Alert.AlertType.ERROR, "Error al generar el PDF", e.getMessage());
-//        }
+       try{
+            String id = txtClaveId.getText();
+            String passwordPdf = txtContrasennadPdf.getText();
+
+             byte[] pdfByte =PDF.fromTxtToPdf(id,passwordPdf);
+
+             Path tempFile = Files.createTempFile("pdfPreview_",".pdf");
+             Files.write(tempFile, pdfByte);
+             renderPreviewPdf(tempFile);
+
+             ToastAlerts.success("Exito", "Se genero el documento PDF");
+             System.out.println("PDF generado en : "+tempFile.toAbsolutePath());
+       } catch (Exception e){
+           System.out.println("Error = " + e);
+           ToastAlerts.error("Error",e.getMessage());
+       }
     }
 
 
@@ -73,11 +73,4 @@ public class DashboardControllerPdf {
         }
     }
 
-    private void showAlert(Alert.AlertType alertType, String title, String message) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
 }

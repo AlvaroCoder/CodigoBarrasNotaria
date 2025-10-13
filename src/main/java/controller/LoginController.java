@@ -15,6 +15,10 @@ import model.AuthModel;
 import model.SessionModel;
 
 public class LoginController {
+
+    @FXML
+    private Button btnRegister;
+
     @FXML
     private ImageView imageLogo;
 
@@ -30,6 +34,7 @@ public class LoginController {
     @FXML
     private void initialize(){
         imageLogo.setImage(new Image(getClass().getResourceAsStream("/assets/LogoCosai.png")));
+        btnRegister.setOnAction(event -> loadRegisterView());
         btnLogin.setOnAction((event -> {
             try{
                 String username = txtUsername.getText();
@@ -63,5 +68,10 @@ public class LoginController {
                 ToastAlerts.error("Error de Inicio", "Ocurrio un error en el Inicio de Sesion");
             }
         }));
+    }
+
+    public void loadRegisterView(){
+
+
     }
 }

@@ -46,10 +46,26 @@
                                           -fx-text-fill: #111827;"
                 />
 
+
                 <Button fx:id="btnLogin"
                         text="Ingresar"
                         style="-fx-background-color: #001f3f; -fx-padding: 10 15;  -fx-font-size: 12px; -fx-text-fill: white;"
                         maxWidth="250"/>
+
+                <Button
+                        fx:id="btnRegister"
+                        text="¿No tienes una cuenta aún?"
+                        style="
+                            -fx-background-color: transparent;
+                            -fx-text-fill: #2563eb;
+                            -fx-underline: true;
+                            -fx-cursor: hand;
+                            -fx-font-size: 13px;
+                            -fx-font-weight: bold;
+                            -fx-padding: 4 0 4 0;
+                        "
+
+                />
 
             </VBox>
         </HBox>

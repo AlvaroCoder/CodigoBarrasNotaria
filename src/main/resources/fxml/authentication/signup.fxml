@@ -37,7 +37,7 @@
                                maxWidth="250"/>
 
                 <Button fx:id="btnLogin"
-                        text="Ingresar"
+                        text="Registrar"
                         style="-fx-background-color: #001f3f; -fx-text-fill: white; -fx-background-radius: 5;"
                         maxWidth="250"/>
 
