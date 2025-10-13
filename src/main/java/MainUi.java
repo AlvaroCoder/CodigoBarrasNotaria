@@ -4,7 +4,7 @@ import view.dashboard.Home;
 
 public class MainUi {
     public static void main(String[] args) {
-        // Register.main(args);
+//         Register.main(args);
         Login.main(args);
     }
 }

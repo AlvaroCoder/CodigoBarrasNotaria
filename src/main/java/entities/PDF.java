@@ -177,10 +177,10 @@ public class PDF {
                     fis.close();
 
                     String pdfBase64 = Base64.getEncoder().encodeToString(pdfBytes);
-                    String txtName=doc.getName().split("\\.")[0]+".txt";
+//                    String txtName=doc.getName().split("\\.")[0]+".txt";
 
-                    String txtPathToDb = new File(pathToDb,txtName).getPath().replace("\\","/");
-
+                    String txtPathToDb = new File(pathToDb,outputTxt.getName()).getPath().replace("\\","/");
+                    System.out.println(txtPathToDb);
                     try(FileWriter fw = new FileWriter(outputTxt)){
                         fw.write(pdfBase64);
                     } catch (Exception e){
