@@ -1,18 +1,25 @@
 package controller;
 
 import config.ToastAlerts;
-import dao.impl.UsbDaoImpl;
+import dao.impl.ClientDaoImpl;
+import entities.Client;
 import entities.PDF;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.util.List;
 
 public class DashboardControllerHome {
+
+    private int idCliente;
+
     @FXML
     private TextField txtInputDir;
 
@@ -35,11 +42,111 @@ public class DashboardControllerHome {
     private Button btnBuscarRutaOutputTxt;
 
     @FXML
+    private Button btnRegistrarCliente;
+
+    @FXML
+    private TableView<Client> tableClientes;
+
+    @FXML
+    private TableColumn<Client, Integer> colId;
+
+    @FXML
+    private TableColumn<Client, String> colNombre;
+
+    @FXML
+    private TableColumn<Client, String> colApellido;
+
+    @FXML
+    private TableColumn<Client, String> colDni;
+
+    @FXML
+    private TableColumn<Client, Void> colSeleccionar;
+
+    private ClientDaoImpl clientDao;
+
+    ControllerParent controllerParent;
+
+    public DashboardControllerHome(){
+        this.clientDao = new ClientDaoImpl();
+    }
+
+    public void setContainerController(ControllerParent controller){
+        this.controllerParent = controller;
+    }
+
+    @FXML
     private void initialize(){
         btnProcess.setOnAction(e->processDocument());
         btnBuscarRutaInput.setOnAction(e->seleccionarCarpeta(btnBuscarRutaInput, txtInputDir));
         btnBuscarRutaOutputPdf.setOnAction(e->seleccionarCarpeta(btnBuscarRutaOutputPdf, txtOutputDirPdf));
         btnBuscarRutaOutputTxt.setOnAction(e->seleccionarCarpeta(btnBuscarRutaOutputTxt, txtOutputDirTxt));
+        btnRegistrarCliente.setOnAction(e->registerClient());
+        loadClients();
+    }
+
+
+    public void loadClients() {
+        try {
+            List<Client> listClients = clientDao.findMany();
+            System.out.println("listClients = " + listClients);
+
+            colId.setCellValueFactory(new PropertyValueFactory<>("id"));
+            colDni.setCellValueFactory(new PropertyValueFactory<>("dni"));
+
+            colNombre.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+            colApellido.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+            colSeleccionar.setCellFactory(param -> new TableCell<Client, Void>() {
+                private final Button btn = new Button("Seleccionar");
+                {
+                    btn.setStyle("""
+                        -fx-background-color: #0C1019;
+                        -fx-text-fill: white;
+                        -fx-background-radius: 4;
+                        -fx-cursor: hand;
+                        -fx-font-weight: bold;
+                    """);
+                    btn.setAlignment(Pos.CENTER);
+                    btn.setOnMouseEntered(ev -> btn.setStyle("-fx-background-color: #1d4ed8; -fx-text-fill: white; -fx-background-radius: 4; -fx-cursor: hand;"));
+                    btn.setOnMouseExited(ev -> btn.setStyle("-fx-background-color: #0C1019; -fx-text-fill: white; -fx-background-radius: 4;"));
+                    btn.setOnAction(event -> {
+                        Client client = getTableView().getItems().get(getIndex());
+                        setIdCliente(client.getId());
+                        tableClientes.refresh();
+                    });
+                }
+
+                @Override
+                protected void updateItem(Void item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        setGraphic(btn);
+                    }
+                }
+            });
+
+            ObservableList<Client> observableList = FXCollections.observableArrayList(listClients);
+            tableClientes.setItems(observableList);
+            tableClientes.setRowFactory(tv -> new TableRow<Client>() {
+                @Override
+                protected void updateItem(Client client, boolean empty) {
+                    super.updateItem(client, empty);
+
+                    if (empty || client == null) {
+                        setStyle("");
+                    } else if (client.getId() == idCliente) {
+                        setStyle("-fx-background-color: #d1fae5;"); // Verde pastel (Tailwind: green-100)
+                    } else {
+                        setStyle("");
+                    }
+                }
+            });
+        } catch (Exception e) {
+            System.out.println("Error al listar clientes: " + e.getMessage());
+            e.printStackTrace();
+            ToastAlerts.error("Error", "No se pudo listar los clientes");
+        }
     }
 
     private void seleccionarCarpeta(Button btnBuscarRuta, TextField outputDirectoryUsb){
@@ -64,7 +171,11 @@ public class DashboardControllerHome {
             return;
         }
 
-        int idCliente =1;
+        if (idCliente==0) {
+            ToastAlerts.warning("Vacio","Cliente no seleccionado");
+            return;
+        }
+
         PDF pdf = new PDF(
                 inputDir,
                 outputDirPdf,
@@ -78,4 +189,11 @@ public class DashboardControllerHome {
 
     }
 
+    public void registerClient(){
+        controllerParent.loadFormCreateClient();
+    }
+
+    public void setIdCliente(int idCliente){
+        this.idCliente = idCliente;
+    }
 }
