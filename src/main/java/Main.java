@@ -1,4 +1,5 @@
 import config.Settings;
+import dao.impl.ClientDaoImpl;
 import entities.PDF;
 import model.AuthModel;
 
@@ -23,7 +24,6 @@ public class Main {
             e.printStackTrace();
             System.out.println("Ocurrio un error a");
         }
-
 
 
 //        try {
