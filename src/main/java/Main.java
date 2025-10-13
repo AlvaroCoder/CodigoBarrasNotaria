@@ -1,4 +1,5 @@
 import config.Settings;
+import dao.impl.ClientDaoImpl;
 import entities.PDF;
 import model.AuthModel;
 
@@ -14,16 +15,21 @@ public class Main {
 //            System.out.println("Ocurrio un error");
 //        }
 
-        PDF pdf = new PDF(Settings.PDF_DIRECTORY,
-                Settings.PROCESSED_PDF_DIRECTORY,
-                Settings.TXT_DIRECTORY);
-        try{
-            pdf.trackFiles(1);
-        } catch (Exception e){
-            e.printStackTrace();
-            System.out.println("Ocurrio un error a");
-        }
+//        PDF pdf = new PDF(Settings.PDF_DIRECTORY,
+//                Settings.PROCESSED_PDF_DIRECTORY,
+//                Settings.TXT_DIRECTORY);
+//        try{
+//            pdf.trackFiles(1);
+//        } catch (Exception e){
+//            e.printStackTrace();
+//            System.out.println("Ocurrio un error a");
+//        }
 
+        try {
+            System.out.println(PDF.fromTxtToPdf("b4b2f5d6-f889-49","e15aa534-ff6e-44"));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
 
 //        try {
