@@ -18,7 +18,7 @@
             <Label text="Gestión de USBs"
                    style="-fx-font-size: 18px; -fx-font-weight: bold;" />
 
-            <TableView fx:id="tableUsb" prefHeight="400" prefWidth="750">
+            <TableView fx:id="tableUsb" prefHeight="400" minHeight="200" prefWidth="750">
                 <columns>
                     <TableColumn fx:id="colId" text="Id del Usb" prefWidth="150"/>
                     <TableColumn fx:id="colCliente" text="Cliente" prefWidth="200"/>

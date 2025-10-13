@@ -1,20 +1,15 @@
 package controller;
 
-import com.mysql.cj.xdevapi.Table;
 import config.ToastAlerts;
-import controller.components.FormCreateClientController;
 import dao.impl.ClientDaoImpl;
 import entities.Client;
 import entities.PDF;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
