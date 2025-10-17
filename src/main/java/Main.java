@@ -1,10 +1,14 @@
 import config.Settings;
 import dao.impl.ClientDaoImpl;
+import dao.impl.UsbDaoImpl;
+import dto.UsbClientDto;
 import entities.PDF;
 import model.AuthModel;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -25,12 +29,15 @@ public class Main {
 //            System.out.println("Ocurrio un error a");
 //        }
 
-        try {
-            System.out.println(PDF.fromTxtToPdf("b4b2f5d6-f889-49","e15aa534-ff6e-44"));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            System.out.println(PDF.fromTxtToPdf("b4b2f5d6-f889-49","e15aa534-ff6e-44"));
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
 
+        UsbDaoImpl usbDaoImpl = new UsbDaoImpl();
+        List<UsbClientDto> rs = usbDaoImpl.findByIdClient(1);
+        rs.forEach(System.out::println);
 
 //        try {
 //            PDF.renderProject(1,"D:/Will/Emprendimiento/Proyectos/results/secret_proyect/carpetPrueba");
