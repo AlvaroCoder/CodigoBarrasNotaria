@@ -198,13 +198,22 @@ public class PDF {
     }
 
 
-    public void trackFiles(int clientId) throws Exception{
-
-        File principalPath= new File(getPdfDirectory()); //esto se debe cambiar
+    public void trackFiles(int clientId) throws Exception {
+        File principalPath = new File(getPdfDirectory());
         File processedPath = new File(getProcessedPdfDirectory());
         File txtPath = new File(getTxtDirectory());
 
-        String pdfPassword = UUID.randomUUID().toString().substring(0,16);
+        if (!principalPath.exists() || !principalPath.isDirectory()) {
+            throw new Exception("La ruta principal no existe o no es un directorio: " + principalPath.getAbsolutePath());
+        }
+        if (!processedPath.exists() && !processedPath.mkdirs()) {
+            throw new Exception("No se pudo crear la ruta de procesados: " + processedPath.getAbsolutePath());
+        }
+        if (!txtPath.exists() && !txtPath.mkdirs()) {
+            throw new Exception("No se pudo crear la ruta de TXT: " + txtPath.getAbsolutePath());
+        }
+
+        String pdfPassword = UUID.randomUUID().toString().substring(0, 16);
 
         WriterProperties props = new WriterProperties().setStandardEncryption(
                 pdfPassword.getBytes(StandardCharsets.UTF_8),
@@ -213,49 +222,72 @@ public class PDF {
                 EncryptionConstants.ENCRYPTION_AES_128
         );
 
-        for (String proyectName:principalPath.list()){
-            File proyectPath = new File(principalPath,proyectName);
-            File proyectPathToDb = new File(proyectName);
+        String[] projectList = principalPath.list();
+        if (projectList == null) {
+            throw new Exception("No se pudo listar el contenido de la ruta principal: " + principalPath.getAbsolutePath());
+        }
 
-            File processedProyectPath = new File(processedPath,proyectName);
-            File txtProyectPath = new File(txtPath,proyectName);
+        for (String projectName : projectList) {
+            File projectPath = new File(principalPath, projectName);
+            if (!projectPath.isDirectory()) continue;
 
-            if (!processedProyectPath.mkdir() || !txtProyectPath.mkdir()){
-                throw new Exception("Ocurrio un error al crear la carpeta proyecto");
+            File projectPathToDb = new File(projectName);
+            File processedProjectPath = new File(processedPath, projectName);
+            File txtProjectPath = new File(txtPath, projectName);
+
+            System.out.println("Creando carpetas de proyecto: " + processedProjectPath + " | " + txtProjectPath);
+
+            if (!processedProjectPath.exists() && !processedProjectPath.mkdirs()) {
+                throw new Exception("Ocurrió un error al crear la carpeta del proyecto: " + processedProjectPath);
+            }
+            if (!txtProjectPath.exists() && !txtProjectPath.mkdirs()) {
+                throw new Exception("Ocurrió un error al crear la carpeta TXT del proyecto: " + txtProjectPath);
             }
 
-            Integer usbId =saveUsbInfo(clientId,null,proyectPathToDb.getPath(), pdfPassword);
+            Integer usbId = saveUsbInfo(clientId, null, projectPathToDb.getPath(), pdfPassword);
 
-            for (String recordName: proyectPath.list()){
-                File recordPath = new File(proyectPath,recordName);
-                File recordPathToDb= new File(proyectPathToDb,recordName);
+            String[] recordList = projectPath.list();
+            if (recordList == null) continue;
 
-                File processedRecordPath = new File(processedProyectPath,recordName);
-                File txtRecordPath = new File(txtProyectPath,recordName);
+            for (String recordName : recordList) {
+                File recordPath = new File(projectPath, recordName);
+                if (!recordPath.isDirectory()) continue;
 
-                if (!processedRecordPath.mkdir() || !txtRecordPath.mkdir()){
-                    throw new Exception("Ocurrio un error al crear la carpeta expediente");
+                File recordPathToDb = new File(projectPathToDb, recordName);
+                File processedRecordPath = new File(processedProjectPath, recordName);
+                File txtRecordPath = new File(txtProjectPath, recordName);
+
+                if (!processedRecordPath.exists() && !processedRecordPath.mkdirs()) {
+                    throw new Exception("Ocurrió un error al crear la carpeta del expediente: " + processedRecordPath);
+                }
+                if (!txtRecordPath.exists() && !txtRecordPath.mkdirs()) {
+                    throw new Exception("Ocurrió un error al crear la carpeta TXT del expediente: " + txtRecordPath);
                 }
 
-                Integer recordId = saveRecordInfo(recordName,null,usbId,recordPathToDb.getPath().replace("\\","/"));
+                Integer recordId = saveRecordInfo(recordName, null, usbId, recordPathToDb.getPath().replace("\\", "/"));
 
-                for (String sectionFile:recordPath.list()){
+                String[] sectionFiles = recordPath.list();
+                if (sectionFiles == null) continue;
+
+                for (String sectionFile : sectionFiles) {
+                    File sectionPath = new File(recordPath, sectionFile);
+                    if (!sectionPath.isFile()) continue; // Ignorar carpetas dentro
+
                     String sectionName = sectionFile.split("\\.")[0];
+                    File sectionPathToDb = new File(recordPathToDb, sectionName);
+                    File processedSectionPath = new File(processedRecordPath, sectionName);
+                    File txtSectionPath = new File(txtRecordPath, sectionName);
 
-                    File sectionPath = new File(recordPath,sectionFile);
-                    File sectionPathtoDb=new File(recordPathToDb,sectionName);
-
-                    File processedSectionPath = new File(processedRecordPath,sectionName);
-                    File txtSectionPath = new File(txtRecordPath,sectionName);
-
-                    if (!processedSectionPath.mkdir() || !txtSectionPath.mkdir()){
-                        throw new Exception("Ocurrio un error al crear la carpeta seccion");
+                    if (!processedSectionPath.exists() && !processedSectionPath.mkdirs()) {
+                        throw new Exception("Ocurrió un error al crear la carpeta de la sección: " + processedSectionPath);
+                    }
+                    if (!txtSectionPath.exists() && !txtSectionPath.mkdirs()) {
+                        throw new Exception("Ocurrió un error al crear la carpeta TXT de la sección: " + txtSectionPath);
                     }
 
-                    Integer sectionId=saveSectionInfo(sectionName,recordId,sectionPathtoDb.getPath().replace("\\","/"));
+                    Integer sectionId = saveSectionInfo(sectionName, recordId, sectionPathToDb.getPath().replace("\\", "/"));
 
-                    processPdf(sectionPath,processedSectionPath,txtSectionPath,props,sectionPathtoDb,sectionId);
-
+                    processPdf(sectionPath, processedSectionPath, txtSectionPath, props, sectionPathToDb, sectionId);
                 }
             }
         }

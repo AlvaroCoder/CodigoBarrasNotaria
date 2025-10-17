@@ -185,6 +185,8 @@ public class DashboardControllerHome {
             pdf.trackFiles(idCliente);
             ToastAlerts.success("Exito","Se procesaron los documentos");
         } catch (Exception e){
+            e.printStackTrace();
+            System.out.println("e = " + e);
             ToastAlerts.error("Error", "Ocurrio un error al procesar los PDF");
         }
 

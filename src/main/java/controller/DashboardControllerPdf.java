@@ -54,6 +54,7 @@ public class DashboardControllerPdf {
              ToastAlerts.success("Exito", "Se genero el documento PDF");
              System.out.println("PDF generado en : "+tempFile.toAbsolutePath());
        } catch (Exception e){
+           e.printStackTrace();
            System.out.println("Error = " + e);
            ToastAlerts.error("Error",e.getMessage());
        }
