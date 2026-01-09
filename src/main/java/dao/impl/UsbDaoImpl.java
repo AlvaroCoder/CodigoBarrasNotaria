@@ -116,29 +116,34 @@ public class UsbDaoImpl implements UsbDao {
     }
 
     @Override
-    public List<UsbClientDto> findByIdClient(int idClient) {
+    public List<UsbClientDto> findByIdClient(int clientId) {
         List<UsbClientDto> usbs = new ArrayList<>();
-        String sql = "SELECT usb.id, c.dni, usb.creationDate, usb.lastModifiedDate " +
-                "FROM usb " +
-                "INNER JOIN client c ON usb.clientId = c.id " +
-                "WHERE c.id = ?";
+        String sql = "SELECT u.id, u.description, u.client_id, u.creation_date, u.last_modified_date, " +
+                "u.pdf_password, u.path, c.dni, c.first_name, c.last_name, c.email FROM usb AS u, client AS c " +
+                "WHERE u.client_id=c.id AND c.id=?";
 
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1, idClient);
+            stmt.setInt(1, clientId);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     Integer usbId = rs.getInt("id");
+                    String description = rs.getString("description");
+                    String path = rs.getString("path");
+                    String firstName = rs.getString("first_name");
+                    String lastName = rs.getString("last_name");
+                    String email= rs.getString("email");
                     String dni = rs.getString("dni");
-                    LocalDateTime creationDate = rs.getTimestamp("creationDate").toLocalDateTime();
-                    LocalDateTime lastModifiedDate = rs.getTimestamp("lastModifiedDate").toLocalDateTime();
+                    LocalDateTime creationDate = rs.getTimestamp("creation_date").toLocalDateTime();
+                    LocalDateTime lastModifiedDate = rs.getTimestamp("last_modified_date").toLocalDateTime();
 
-                    usbs.add(new UsbClientDto(usbId, dni, creationDate, lastModifiedDate));
+                    usbs.add(new UsbClientDto(usbId,description, creationDate, lastModifiedDate,clientId,dni,email,firstName,lastName,path));
                 }
             }
         } catch (Exception e) {
+            System.out.println(e.toString());
             return Collections.emptyList();
         }
         return usbs;
