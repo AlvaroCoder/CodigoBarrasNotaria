@@ -32,8 +32,8 @@ public class UsbDaoImpl implements UsbDao {
     public List<Usb> findMany(){
         ArrayList<Usb> usbs = new ArrayList<>();
 
-        String sql = "SELECT id, description, client_id, creation_date, last_modified_date,path FROM usb";
-
+        String sql = "SELECT id, description, client_id, creation_date, pdf_password, last_modified_date,path FROM usb";
+        // SELECT usb.id, usb.description, usb.client_id, usb.creation_date, usb.last_modified_date, usb.pdf_password, usb.path, client.dni, client.first_name, client.last_name FROM usb, client INNER JOIN usb.client_id = client.id;
         try(Connection conn = DbConnection.getConnection();
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -42,10 +42,11 @@ public class UsbDaoImpl implements UsbDao {
                 Integer id =rs.getObject("id",Integer.class);
                 String description=rs.getObject("description",String.class);
                 Integer clientId =  rs.getObject("client_id",Integer.class);
+                String pdfPassword = rs.getString("pdf_password");
                 LocalDateTime creationDate=rs.getObject("creation_date",LocalDateTime.class);
                 LocalDateTime lastModifiedDate = rs.getObject("last_modified_date",LocalDateTime.class);
                 String path = rs.getObject("path",String.class);
-                usbs.add(new Usb(id,description,clientId,creationDate,lastModifiedDate,path));
+                usbs.add(new Usb(id,description,clientId,creationDate,lastModifiedDate, pdfPassword,path));
             }
         }catch (Exception e){
             return Collections.emptyList();

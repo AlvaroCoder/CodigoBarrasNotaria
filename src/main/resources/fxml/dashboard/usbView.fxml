@@ -22,6 +22,7 @@
                 <columns>
                     <TableColumn fx:id="colId" text="Id del Usb" prefWidth="150"/>
                     <TableColumn fx:id="colCliente" text="Cliente" prefWidth="200"/>
+                    <TableColumn fx:id="colPassword" text="Contraseña" prefWidth="200"/>
                     <TableColumn fx:id="colFechaCreacion" text="Fecha Creación" prefWidth="200"/>
                     <TableColumn fx:id="colFechaModificacion" text="Fecha Modificación" prefWidth="200"/>
                 </columns>

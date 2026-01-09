@@ -29,6 +29,9 @@ public class DashboardControllerUsb {
     @FXML
     private TableColumn<Usb, LocalDateTime> colFechaModificacion;
 
+    @FXML
+    private TableColumn<Usb, String> colPassword;
+
     private UsbDaoImpl usbDao;
 
     public DashboardControllerUsb(){
@@ -45,7 +48,8 @@ public class DashboardControllerUsb {
             List<Usb> usbs = usbDao.findMany();
 
             colId.setCellValueFactory(new PropertyValueFactory<>("id"));
-            colCliente.setCellValueFactory(new PropertyValueFactory<>("clientUsername"));
+            colCliente.setCellValueFactory(new PropertyValueFactory<>("clientId"));
+            colPassword.setCellValueFactory(new PropertyValueFactory<>("pdfPassword"));
             colFechaCreacion.setCellValueFactory(new PropertyValueFactory<>("creationDate"));
             colFechaModificacion.setCellValueFactory(new PropertyValueFactory<>("lastModifiedDate"));
 
